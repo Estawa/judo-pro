@@ -1,0 +1,148 @@
+// Banque de questions — évaluation théorique
+// QCM : q = question, c = choix, r = index de la bonne réponse, e = explication, th = thème, n = 'base' (fiche théorie) ou 'staps' (approfondissement L2)
+export const THEMES = {
+  histoire: 'Histoire', principes: 'Principes et code moral', vocabulaire: 'Vocabulaire', technique: 'Analyse technique',
+  reglement: 'Règlement et arbitrage', securite: 'Sécurité', biomeca: 'Biomécanique', physio: 'Physiologie', didactique: 'Didactique', grades: 'Grades et kata',
+};
+
+export const QCM = [
+  // Histoire
+  { q: 'Que signifie « judo » ?', c: ['Voie de la souplesse', 'Art de la guerre', 'Combat à mains nues', 'Voie du guerrier'], r: 0, e: 'Ju = souplesse, do = voie.', th: 'histoire', n: 'base' },
+  { q: 'Qui a fondé le judo ?', c: ['Morihei Ueshiba', 'Jigoro Kano', 'Mikinosuke Kawaishi', 'Gichin Funakoshi'], r: 1, e: 'Jigoro Kano (1860-1938). Ueshiba a fondé l\'aïkido, Funakoshi le karaté shotokan.', th: 'histoire', n: 'base' },
+  { q: 'En quelle année le Kodokan a-t-il été fondé ?', c: ['1864', '1882', '1912', '1951'], r: 1, e: 'Le Kodokan est fondé en 1882 à Tokyo.', th: 'histoire', n: 'base' },
+  { q: 'Que veut dire « Kodokan » ?', c: ['Salle d\'entraînement', 'École où l\'on étudie la voie', 'Maison des maîtres', 'Temple du combat'], r: 1, e: 'Le Kodokan est l\'école où l\'on étudie la voie.', th: 'histoire', n: 'base' },
+  { q: 'Depuis quand le judo masculin est-il olympique ?', c: ['1948', '1956', '1964', '1972'], r: 2, e: 'Jeux de Tokyo, 1964.', th: 'histoire', n: 'base' },
+  { q: 'Depuis quand le judo féminin est-il olympique ?', c: ['1980', '1988', '1992', '2000'], r: 2, e: 'Jeux de Barcelone, 1992 (démonstration à Séoul en 1988).', th: 'histoire', n: 'base' },
+  { q: 'Dans quelle ville le judo est-il devenu olympique ?', c: ['Tokyo', 'Mexico', 'Rome', 'Munich'], r: 0, e: 'Tokyo, 1964.', th: 'histoire', n: 'base' },
+  { q: 'Quel maître japonais a développé le judo en France dans les années 1930 ?', c: ['Kyuzo Mifune', 'Mikinosuke Kawaishi', 'Masahiko Kimura', 'Yasuhiro Yamashita'], r: 1, e: 'Kawaishi s\'installe à Paris ; le Jiu-Jitsu Club de France est fondé en 1936.', th: 'histoire', n: 'staps' },
+  { q: 'Quand la Fédération internationale de judo a-t-elle été créée ?', c: ['1882', '1936', '1951', '1964'], r: 2, e: 'La FIJ est créée en 1951.', th: 'histoire', n: 'staps' },
+  { q: 'Qui fut le premier champion du monde non japonais (1961) ?', c: ['Anton Geesink', 'Angelo Parisi', 'David Douillet', 'Wilhelm Ruska'], r: 0, e: 'Le Néerlandais Anton Geesink, à Paris en 1961, puis champion olympique toutes catégories en 1964.', th: 'histoire', n: 'staps' },
+  { q: 'Quelle épreuve olympique a été introduite aux Jeux de Tokyo 2020 (disputés en 2021) ?', c: ['Le kata', 'Les équipes mixtes', 'Le ne-waza seul', 'L\'open toutes catégories'], r: 1, e: 'L\'épreuve par équipes mixtes, gagnée par la France.', th: 'histoire', n: 'staps' },
+  // Principes
+  { q: 'Que signifie seiryoku zen\'yo ?', c: ['Entraide et prospérité mutuelle', 'Meilleure utilisation de l\'énergie', 'Esprit, technique, corps', 'Céder pour vaincre'], r: 1, e: 'Premier principe de Kano.', th: 'principes', n: 'base' },
+  { q: 'Que signifie jita kyoei ?', c: ['Entraide et prospérité mutuelle', 'Meilleure utilisation de l\'énergie', 'Respect du maître', 'Contrôle de soi'], r: 0, e: 'Second principe de Kano.', th: 'principes', n: 'base' },
+  { q: 'Quel principe applique-t-on en déséquilibrant le partenaire plutôt qu\'en forçant ?', c: ['Jita kyoei', 'Seiryoku zen\'yo', 'Shin-gi-tai', 'Rei'], r: 1, e: 'Utiliser la force de l\'autre = meilleure utilisation de l\'énergie.', th: 'principes', n: 'base' },
+  { q: 'Combien de valeurs compte le code moral du judo ?', c: ['5', '6', '8', '10'], r: 2, e: 'Politesse, courage, sincérité, honneur, modestie, respect, contrôle de soi, amitié.', th: 'principes', n: 'base' },
+  { q: 'Laquelle de ces valeurs ne fait PAS partie du code moral ?', c: ['Modestie', 'Victoire', 'Sincérité', 'Amitié'], r: 1, e: 'La victoire n\'est pas une valeur du code moral.', th: 'principes', n: 'base' },
+  { q: 'Ne jamais projeter pour faire mal illustre quelle valeur ?', c: ['Courage', 'Honneur', 'Contrôle de soi', 'Sincérité'], r: 2, e: 'Le contrôle de soi.', th: 'principes', n: 'base' },
+  { q: 'Que signifie shin-gi-tai ?', c: ['Saluer, saisir, projeter', 'Esprit, technique, corps', 'Déséquilibre, placement, exécution', 'Debout, sol, combat'], r: 1, e: 'Les trois dimensions à développer chez le judoka.', th: 'principes', n: 'staps' },
+  // Vocabulaire
+  { q: 'Comment s\'appelle celui qui exécute la technique ?', c: ['Uke', 'Tori', 'Sensei', 'Kohai'], r: 1, e: 'Tori exécute, uke chute.', th: 'vocabulaire', n: 'base' },
+  { q: 'Tori ou uke : qui chute ?', c: ['Tori', 'Uke', 'Les deux', 'L\'arbitre'], r: 1, e: 'Uke subit la technique et chute.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire ukemi ?', c: ['Saisie', 'Brise-chute', 'Déplacement', 'Salut'], r: 1, e: 'Ukemi = brise-chute.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire randori ?', c: ['Forme codifiée', 'Exercice d\'opposition libre', 'Compétition officielle', 'Répétition d\'entrées'], r: 1, e: 'Le kata est la forme codifiée, le shiai la compétition.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire uchi-komi ?', c: ['Répétition d\'entrées sans projeter', 'Répétition de projections', 'Combat libre au sol', 'Salut à genoux'], r: 0, e: 'L\'uchi-komi automatise le placement sans projeter.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire nage-komi ?', c: ['Répétition d\'entrées', 'Répétition de projections', 'Projection en cercle', 'Technique de hanche'], r: 1, e: 'On projette réellement.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire ne-waza ?', c: ['Travail debout', 'Travail au sol', 'Technique spéciale', 'Contre-prise'], r: 1, e: 'Tachi-waza = travail debout.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire tokui-waza ?', c: ['Technique interdite', 'Technique spéciale, préférée', 'Technique de sacrifice', 'Technique de bras'], r: 1, e: 'La technique favorite du judoka.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire kumikata ?', c: ['La chute', 'La saisie, la façon de saisir', 'Le salut', 'Le déplacement'], r: 1, e: 'Le kumikata est la garde.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire renraku-waza ?', c: ['Contre-prises', 'Combinaisons de techniques', 'Techniques de sacrifice', 'Immobilisations'], r: 1, e: 'Enchaîner deux attaques.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire kaeshi-waza ?', c: ['Combinaisons', 'Contre-prises', 'Clés de bras', 'Balayages'], r: 1, e: 'Retourner l\'attaque de l\'adversaire.', th: 'vocabulaire', n: 'base' },
+  { q: 'Que veut dire sutemi-waza ?', c: ['Techniques de hanche', 'Techniques de sacrifice', 'Techniques d\'épaule', 'Techniques interdites'], r: 1, e: 'Tori se met volontairement au sol pour projeter.', th: 'vocabulaire', n: 'base' },
+  { q: 'Comment s\'appelle le salut à genoux ?', c: ['Ritsu-rei', 'Za-rei', 'Rei-ho', 'Seiza'], r: 1, e: 'Ritsu-rei est le salut debout.', th: 'vocabulaire', n: 'base' },
+  // Technique
+  { q: 'Quelles sont les trois phases d\'une projection ?', c: ['Rei, hajime, matte', 'Kuzushi, tsukuri, kake', 'Uchi-komi, nage-komi, randori', 'Tori, uke, kake'], r: 1, e: 'Déséquilibre, placement, exécution.', th: 'technique', n: 'base' },
+  { q: 'Que veut dire kuzushi ?', c: ['Déséquilibre', 'Placement', 'Exécution', 'Saisie'], r: 0, e: 'Kuzushi = déséquilibre.', th: 'technique', n: 'base' },
+  { q: 'Que veut dire tsukuri ?', c: ['Déséquilibre', 'Placement, construction', 'Exécution', 'Chute'], r: 1, e: 'Tsukuri = placement.', th: 'technique', n: 'base' },
+  { q: 'Comment s\'appellent les techniques de contrôle au sol ?', c: ['Nage-waza', 'Katame-waza', 'Tachi-waza', 'Te-waza'], r: 1, e: 'Katame-waza regroupe osae-komi, shime et kansetsu-waza.', th: 'technique', n: 'base' },
+  { q: 'Laquelle n\'est PAS une sous-famille du katame-waza ?', c: ['Osae-komi-waza', 'Shime-waza', 'Koshi-waza', 'Kansetsu-waza'], r: 2, e: 'Koshi-waza = techniques de hanche (nage-waza).', th: 'technique', n: 'base' },
+  { q: 'Traduisez o-soto-gari.', c: ['Petit fauchage intérieur', 'Grand fauchage extérieur', 'Grand fauchage intérieur', 'Balayage du pied avancé'], r: 1, e: 'O = grand, soto = extérieur, gari = fauchage.', th: 'technique', n: 'base' },
+  { q: 'Traduisez ko-uchi-gari.', c: ['Petit fauchage intérieur', 'Grand fauchage intérieur', 'Petit fauchage extérieur', 'Petit accrochage extérieur'], r: 0, e: 'Ko = petit, uchi = intérieur.', th: 'technique', n: 'base' },
+  { q: 'Traduisez ko-soto-gari.', c: ['Grand fauchage extérieur', 'Petit fauchage extérieur', 'Petit fauchage intérieur', 'Hanche balayée'], r: 1, e: 'Ko = petit, soto = extérieur.', th: 'technique', n: 'base' },
+  { q: 'Traduisez o-uchi-gari.', c: ['Grand fauchage intérieur', 'Grande bascule de hanche', 'Grand fauchage extérieur', 'Grande roue'], r: 0, e: 'O = grand, uchi = intérieur.', th: 'technique', n: 'base' },
+  { q: 'Que veut dire « goshi » dans o-goshi ?', c: ['Épaule', 'Hanche', 'Pied', 'Genou'], r: 1, e: 'O-goshi = grande bascule de hanche.', th: 'technique', n: 'base' },
+  { q: 'Dans quelle direction déséquilibre-t-on uke pour o-soto-gari ?', c: ['Avant', 'Arrière-droit', 'Avant-gauche', 'Sur le côté gauche'], r: 1, e: 'Sur son talon droit, vers l\'arrière-droit (pour un droitier).', th: 'technique', n: 'base' },
+  { q: 'Quelle posture est droite et mobile ?', c: ['Jigo-tai', 'Shizen-tai', 'Seiza', 'Kamae'], r: 1, e: 'Jigo-tai est la posture défensive.', th: 'technique', n: 'base' },
+  { q: 'Quel est l\'inconvénient de jigo-tai ?', c: ['Elle fatigue les bras', 'Elle empêche d\'attaquer', 'Elle est interdite', 'Elle expose aux clés'], r: 1, e: 'Basse et fléchie, elle bloque mais empêche d\'attaquer.', th: 'technique', n: 'base' },
+  { q: 'Si uke résiste vers l\'avant, dans quelle direction attaquer ?', c: ['Vers l\'avant', 'Vers l\'arrière', 'On n\'attaque pas', 'Au sol'], r: 0, e: 'Il pousse vers l\'avant : on l\'emmène vers l\'avant (ex. seoi-nage). S\'il recule, on attaque vers l\'arrière.', th: 'technique', n: 'base' },
+  { q: 'Combien de techniques compte le gokyo no waza ?', c: ['20', '40', '68', '100'], r: 1, e: '5 groupes de 8 projections.', th: 'technique', n: 'staps' },
+  { q: 'Que désigne « hikite » ?', c: ['La main de revers', 'La main de manche, qui tire', 'Le pied d\'appui', 'Le genou au sol'], r: 1, e: 'Tsurite = main de revers.', th: 'technique', n: 'staps' },
+  { q: 'Qu\'appelle-t-on kenka-yotsu ?', c: ['Gardes identiques', 'Gardes opposées (droitier contre gaucher)', 'Garde croisée interdite', 'Garde à une main'], r: 1, e: 'Ai-yotsu = gardes identiques.', th: 'technique', n: 'staps' },
+  { q: 'Tsugi-ashi désigne :', c: ['Le pas marché', 'Les pas chassés', 'Le pivot', 'Le saut'], r: 1, e: 'Un pied suit l\'autre sans le dépasser.', th: 'technique', n: 'staps' },
+  { q: 'Contrer après l\'attaque de l\'adversaire correspond à :', c: ['Sen sen no sen', 'Sen no sen', 'Go no sen', 'Kuzushi'], r: 2, e: 'Go no sen : réagir après l\'attaque.', th: 'technique', n: 'staps' },
+  // Règlement
+  { q: 'Quel score arrête immédiatement le combat ?', c: ['Yuko', 'Waza-ari', 'Ippon', 'Shido'], r: 2, e: 'Ippon = point complet.', th: 'reglement', n: 'base' },
+  { q: 'Combien de secondes d\'immobilisation pour un ippon ?', c: ['10 s', '15 s', '20 s', '25 s'], r: 2, e: '20 s = ippon.', th: 'reglement', n: 'base' },
+  { q: 'Une immobilisation de 10 à 19 s donne :', c: ['Yuko', 'Waza-ari', 'Ippon', 'Rien'], r: 1, e: '5 à 9 s = yuko ; 10 à 19 s = waza-ari ; 20 s = ippon.', th: 'reglement', n: 'base' },
+  { q: 'Une immobilisation de 5 à 9 s donne :', c: ['Yuko', 'Waza-ari', 'Ippon', 'Rien'], r: 0, e: 'Yuko.', th: 'reglement', n: 'base' },
+  { q: 'Deux waza-ari valent :', c: ['Un yuko', 'Rien de plus', 'Ippon', 'Un shido'], r: 2, e: 'Waza-ari awasete ippon.', th: 'reglement', n: 'base' },
+  { q: 'Deux yuko valent-ils un waza-ari ?', c: ['Oui', 'Non, les yuko ne s\'additionnent pas', 'Oui, au golden score seulement', 'Trois yuko oui'], r: 1, e: 'Un waza-ari bat n\'importe quel nombre de yuko.', th: 'reglement', n: 'base' },
+  { q: 'Que veut dire toketa ?', c: ['Immobilisation', 'Sortie d\'immobilisation', 'Ne bougez plus', 'C\'est fini'], r: 1, e: 'Annonce quand uke se dégage.', th: 'reglement', n: 'base' },
+  { q: 'Que veut dire hajime ?', c: ['Stop', 'Commencez', 'Reprenez', 'C\'est fini'], r: 1, e: 'Hajime = commencez.', th: 'reglement', n: 'base' },
+  { q: 'Que veut dire matte ?', c: ['Commencez', 'Attendez, stop', 'Ne bougez plus', 'Immobilisation'], r: 1, e: 'Au matte, tout s\'arrête.', th: 'reglement', n: 'base' },
+  { q: 'Que veut dire sono-mama ?', c: ['Ne bougez plus', 'Reprenez', 'Stop', 'Pénalité'], r: 0, e: 'Yoshi = reprenez.', th: 'reglement', n: 'base' },
+  { q: 'Que veut dire sore-made ?', c: ['Commencez', 'C\'est fini', 'Prolongation', 'Disqualification'], r: 1, e: 'Annonce de fin de combat.', th: 'reglement', n: 'base' },
+  { q: 'Combien de shido entraînent la disqualification ?', c: ['2', '3', '4', '5'], r: 1, e: 'Le 3e shido donne hansoku-make.', th: 'reglement', n: 'base' },
+  { q: 'Comment s\'appelle la disqualification ?', c: ['Shido', 'Hansoku-make', 'Kiken-gachi', 'Fusen-gachi'], r: 1, e: 'Hansoku-make.', th: 'reglement', n: 'base' },
+  { q: 'Que veut dire golden score ?', c: ['Le meilleur score de la saison', 'Prolongation : le premier qui marque gagne', 'Un ippon spectaculaire', 'Le score du vainqueur'], r: 1, e: 'Prolongation sans limite de temps.', th: 'reglement', n: 'base' },
+  { q: 'Quelle est la durée d\'un combat senior ?', c: ['3 min', '4 min', '5 min', '6 min'], r: 1, e: '4 min de temps effectif.', th: 'reglement', n: 'base' },
+  { q: 'Un shido donne-t-il un point à l\'adversaire ?', c: ['Oui, un yuko', 'Oui, un waza-ari', 'Non', 'Seulement au golden score'], r: 2, e: 'Le shido ne donne pas de point.', th: 'reglement', n: 'base' },
+  { q: 'Quel geste correspond au waza-ari ?', c: ['Bras tendu au-dessus de la tête', 'Bras tendu sur le côté à hauteur d\'épaule', 'Bras à 45° vers le bas', 'Index pointé'], r: 1, e: 'Ippon : bras au-dessus de la tête ; yuko : 45° vers le bas.', th: 'reglement', n: 'base' },
+  { q: 'Quel geste correspond au yuko ?', c: ['Bras tendu au-dessus de la tête', 'Bras tendu sur le côté à hauteur d\'épaule', 'Bras tendu sur le côté à 45° vers le bas', 'Main levée vers la table'], r: 2, e: 'Bras à 45° vers le bas.', th: 'reglement', n: 'base' },
+  { q: 'Une chute sur les deux genoux donne :', c: ['Yuko', 'Waza-ari', 'Pas de score', 'Shido'], r: 2, e: 'Contact sur les genoux, les hanches ou le ventre : pas de score.', th: 'reglement', n: 'staps' },
+  { q: 'Au golden score, une immobilisation de 5 s :', c: ['Ne compte pas', 'Donne yuko et termine le combat', 'Donne waza-ari', 'Doit durer 20 s'], r: 1, e: 'Le premier avantage termine le golden score.', th: 'reglement', n: 'staps' },
+  // Sécurité
+  { q: 'Sur quelle articulation les clés sont-elles autorisées ?', c: ['Le poignet', 'Le coude', 'L\'épaule', 'Le genou'], r: 1, e: 'Le coude uniquement.', th: 'securite', n: 'base' },
+  { q: 'Comment abandonne-t-on ?', c: ['En levant la main', 'En tapant 2 fois ou en disant « maitta »', 'En criant « matte »', 'En sortant du tapis'], r: 1, e: '2 tapes sur le partenaire ou le tapis, ou « maitta » (j\'abandonne).', th: 'securite', n: 'base' },
+  { q: 'Les clés sont-elles autorisées debout ?', c: ['Oui', 'Non', 'Seulement pour les ceintures noires', 'Seulement en randori'], r: 1, e: 'Clés et étranglements sont interdits en tachi-waza.', th: 'securite', n: 'base' },
+  { q: 'Laquelle de ces techniques est interdite ?', c: ['Juji-gatame', 'Kani-basami', 'Hadaka-jime', 'Kesa-gatame'], r: 1, e: 'Kani-basami (ciseau de crabe) est interdit, comme do-jime.', th: 'securite', n: 'base' },
+  { q: 'Lors d\'un étranglement, que faire si le partenaire semble en difficulté sans taper ?', c: ['Continuer jusqu\'à l\'abandon', 'Lâcher et prévenir l\'enseignant', 'Serrer plus fort', 'Attendre le matte'], r: 1, e: 'On lâche toujours en cas de doute.', th: 'securite', n: 'base' },
+  { q: 'En chute arrière, où frappent les bras ?', c: ['Le long du corps', 'À environ 45° du corps', 'Au-dessus de la tête', 'Derrière le dos'], r: 1, e: 'Bras tendus à 45°, paumes vers le sol.', th: 'securite', n: 'base' },
+  { q: 'Pourquoi rentre-t-on le menton en chutant ?', c: ['Pour mieux respirer', 'Pour que la tête ne touche pas le tapis', 'Pour voir le partenaire', 'Par politesse'], r: 1, e: 'Protection de la tête et de la nuque.', th: 'securite', n: 'base' },
+  // Biomécanique
+  { q: 'Un corps est déséquilibré quand la projection de son centre de gravité :', c: ['Passe au-dessus de la tête', 'Sort du polygone de sustentation', 'Reste entre les pieds', 'Descend vers le sol'], r: 1, e: 'Le polygone de sustentation est la surface délimitée par les appuis.', th: 'biomeca', n: 'staps' },
+  { q: 'Selon Sacripanti, de-ashi-barai repose principalement sur :', c: ['Un levier', 'Un couple de forces', 'Une poussée simple', 'Un soulevé'], r: 1, e: 'Mains et pied appliquent deux forces opposées : couple.', th: 'biomeca', n: 'staps' },
+  { q: 'Selon Sacripanti, seoi-nage repose principalement sur :', c: ['Un levier', 'Un couple de forces', 'Une rotation libre', 'Un balayage'], r: 0, e: 'Le dos et l\'épaule de tori servent de point d\'appui.', th: 'biomeca', n: 'staps' },
+  { q: 'Pourquoi le bassin de tori doit-il être plus bas que celui de uke en o-goshi ?', c: ['Pour être plus rapide', 'Pour placer le point d\'appui sous le centre de gravité de uke', 'Pour se protéger des contres', 'Par convention'], r: 1, e: 'Le levier est efficace si l\'appui est sous le CG de uke.', th: 'biomeca', n: 'staps' },
+  { q: 'Les combinaisons (renraku-waza) s\'appuient sur quelle loi ?', c: ['La gravitation universelle', 'Le principe d\'action-réaction', 'La loi d\'Ohm', 'La conservation de l\'énergie thermique'], r: 1, e: 'Troisième loi de Newton : uke réagit à la première attaque.', th: 'biomeca', n: 'staps' },
+  { q: 'Pourquoi une chute roulée réduit-elle la force subie ?', c: ['Elle augmente le temps et la surface de contact', 'Elle diminue la masse', 'Elle augmente la vitesse', 'Elle supprime la gravité'], r: 0, e: 'F × Δt = Δ(mv) : plus Δt est grand, plus F est faible.', th: 'biomeca', n: 'staps' },
+  // Physiologie
+  { q: 'Le rapport effort-récupération typique d\'un combat de judo est d\'environ :', c: ['1 pour 5', '1 pour 1', '2 à 3 pour 1', '10 pour 1'], r: 2, e: 'Environ 20-30 s d\'effort pour 5-10 s de pause.', th: 'physio', n: 'staps' },
+  { q: 'Quelle filière permet surtout de récupérer entre les séquences d\'effort ?', c: ['Anaérobie alactique', 'Anaérobie lactique', 'Aérobie', 'Aucune'], r: 2, e: 'L\'aérobie resynthétise la phosphocréatine pendant les pauses.', th: 'physio', n: 'staps' },
+  { q: 'Quelle filière fournit l\'énergie d\'une attaque explosive de 3 secondes ?', c: ['Anaérobie alactique', 'Aérobie', 'Lipolyse', 'Anaérobie lactique'], r: 0, e: 'Phosphocréatine : efforts très courts et intenses.', th: 'physio', n: 'staps' },
+  { q: 'Dans le SJFT, quelles sont les durées des trois séries ?', c: ['10 s, 20 s, 30 s', '15 s, 30 s, 30 s', '30 s, 30 s, 30 s', '1 min, 1 min, 1 min'], r: 1, e: 'Avec 10 s de récupération entre les séries.', th: 'physio', n: 'staps' },
+  { q: 'Dans le SJFT, un indice plus faible signifie :', c: ['Une moins bonne condition', 'Une meilleure condition', 'Une fréquence cardiaque élevée', 'Moins de projections'], r: 1, e: 'Indice = (FC1 + FC2) / nombre de projections.', th: 'physio', n: 'staps' },
+  { q: 'Quelle qualité est particulièrement sollicitée par le kumikata ?', c: ['Souplesse des hanches', 'Force de préhension', 'Vitesse de course', 'Détente verticale'], r: 1, e: 'La préhension diminue au fil des combats.', th: 'physio', n: 'staps' },
+  // Didactique
+  { q: 'Pourquoi commencer le judo par le travail au sol ?', c: ['C\'est plus facile à arbitrer', 'On peut s\'opposer tout de suite sans risque de chute', 'C\'est moins fatigant', 'C\'est obligatoire'], r: 1, e: 'Le ne-waza permet l\'opposition réelle en sécurité.', th: 'didactique', n: 'staps' },
+  { q: 'Le kakari-geiko consiste à :', c: ['Attaquer sans arrêt pendant que uke défend seulement', 'Faire un kata', 'Combattre en compétition', 'Répéter des chutes'], r: 0, e: 'Tori attaque, uke défend sans contre-attaquer.', th: 'didactique', n: 'staps' },
+  { q: 'Le yakusoku-geiko est :', c: ['Un combat libre', 'Un travail convenu en déplacement, sans opposition', 'Une compétition', 'Un échauffement'], r: 1, e: 'Les partenaires conviennent des attaques.', th: 'didactique', n: 'staps' },
+  { q: '« Hanches basses, jambes écartées » est un critère :', c: ['De réussite', 'De réalisation', 'D\'évaluation sommative', 'De sécurité uniquement'], r: 1, e: 'Le critère de réalisation dit comment faire ; le critère de réussite dit le résultat.', th: 'didactique', n: 'staps' },
+  { q: 'Quelle variable didactique augmente la difficulté d\'un exercice de projection ?', c: ['Passer d\'un uke passif à un uke qui résiste', 'Réduire le nombre de répétitions', 'Allonger la pause', 'Changer de tapis'], r: 0, e: 'Le degré d\'opposition est la variable principale.', th: 'didactique', n: 'staps' },
+  { q: 'Dans le modèle de Fitts et Posner, l\'étape où le geste devient automatique est :', c: ['Cognitive', 'Associative', 'Autonome', 'Réflexive'], r: 2, e: 'Cognitive → associative → autonome.', th: 'didactique', n: 'staps' },
+  // Grades
+  { q: 'Quelle couleur vient après la ceinture verte ?', c: ['Orange', 'Bleue', 'Marron', 'Jaune'], r: 1, e: 'Blanche, jaune, orange, verte, bleue, marron.', th: 'grades', n: 'base' },
+  { q: 'Comment s\'appellent les degrés de la ceinture noire ?', c: ['Kyu', 'Dan', 'Rei', 'Waza'], r: 1, e: 'Les kyu sont les grades avant la ceinture noire.', th: 'grades', n: 'base' },
+  { q: 'Combien de séries compte le nage-no-kata ?', c: ['3', '5', '8', '10'], r: 1, e: '5 séries de 3 techniques.', th: 'grades', n: 'staps' },
+  { q: 'Quelle est la première technique du nage-no-kata ?', c: ['O-soto-gari', 'Uki-otoshi', 'Seoi-nage', 'Tomoe-nage'], r: 1, e: '1re série (te-waza) : uki-otoshi, seoi-nage, kata-guruma.', th: 'grades', n: 'staps' },
+  { q: 'Quelle ceinture portent les 6e à 8e dan ?', c: ['Noire', 'Rouge et blanche', 'Rouge', 'Blanche'], r: 1, e: '9e et 10e dan : rouge.', th: 'grades', n: 'staps' },
+];
+
+// Questions courtes : q = question, corrige = éléments attendus, bareme = points
+export const COURTES = [
+  { q: 'Expliquez la différence entre uchi-komi (répétition d\'entrées) et nage-komi (répétition de projections), et l\'intérêt de chacun.', corrige: ['Uchi-komi : on répète l\'entrée (kuzushi + tsukuri) sans projeter', 'Intérêt : automatiser le placement, beaucoup de répétitions sans fatiguer ni blesser uke', 'Nage-komi : on projette réellement', 'Intérêt : sentir la technique complète (kake), travailler la chute de uke', 'Complémentaires : beaucoup d\'uchi-komi, quelques nage-komi'], bareme: 1, n: 'base' },
+  { q: 'Décrivez les trois phases d\'une projection, kuzushi (déséquilibre), tsukuri (placement) et kake (exécution), sur l\'exemple d\'o-soto-gari (grand fauchage extérieur).', corrige: ['Kuzushi : pousser le revers, tirer la manche, poids de uke sur le talon droit (arrière-droit)', 'Tsukuri : pied gauche à côté du pied droit de uke, poitrine contre poitrine, jambe droite qui passe derrière', 'Kake : faucher la jambe droite de uke d\'avant en arrière avec la cuisse, buste vers l\'avant'], bareme: 1, n: 'base' },
+  { q: 'Choisissez une valeur du code moral et illustrez-la par une situation vécue au dojo (lieu d\'étude de la voie).', corrige: ['Nommer une des 8 valeurs (politesse, courage, sincérité, honneur, modestie, respect, contrôle de soi, amitié)', 'Situation concrète et cohérente (ex. : contrôle de soi = lâcher dès que le partenaire tape)'], bareme: 1, n: 'base' },
+  { q: 'Expliquez les deux principes de Jigoro Kano et donnez un exemple pour chacun.', corrige: ['Seiryoku zen\'yo : meilleure utilisation de l\'énergie ; ex. utiliser la poussée de uke pour le projeter vers l\'avant', 'Jita kyoei : entraide et prospérité mutuelle ; ex. être un bon uke pour faire progresser son partenaire'], bareme: 1, n: 'base' },
+  { q: 'Citez les deux grandes familles de techniques et les trois sous-familles du travail au sol.', corrige: ['Nage-waza (projections) et katame-waza (contrôles)', 'Osae-komi-waza (immobilisations), shime-waza (étranglements), kansetsu-waza (clés articulaires)'], bareme: 1, n: 'base' },
+  { q: 'Donnez les valeurs des scores en immobilisation et la règle d\'addition des avantages.', corrige: ['5 à 9 s = yuko ; 10 à 19 s = waza-ari ; 20 s = ippon', 'Deux waza-ari = ippon', 'Les yuko ne s\'additionnent pas ; un waza-ari bat n\'importe quel nombre de yuko'], bareme: 1, n: 'base' },
+  { q: 'Énoncez trois règles de sécurité concernant les clés et les étranglements.', corrige: ['Clé sur le coude uniquement', 'Pression lente et progressive, jamais sur la trachée', 'Abandon par 2 tapes ou « maitta », lâcher immédiat', 'Interdits debout ; réservés aux niveaux intermédiaire et plus'], bareme: 1, n: 'base' },
+  { q: 'Expliquez le principe d\'une combinaison (renraku-waza) avec un exemple.', corrige: ['La première attaque provoque une réaction de uke', 'La seconde utilise cette réaction (action-réaction)', 'Ex. : o-uchi-gari vers l\'arrière, uke résiste vers l\'avant → uchi-mata ou seoi-nage vers l\'avant'], bareme: 1, n: 'base' },
+  { q: 'À partir de la notion de polygone de sustentation, expliquez ce qu\'est le kuzushi.', corrige: ['Équilibre tant que la projection du CG reste dans le polygone délimité par les appuis', 'Le kuzushi déplace le CG de uke et réduit son polygone (pointe des pieds, talons, appui sur un pied)', 'La technique est placée quand le CG sort ou va sortir du polygone'], bareme: 1, n: 'staps' },
+  { q: 'Distinguez les projections « de couple » et « de levier » (Sacripanti) avec un exemple de chaque.', corrige: ['Couple : deux forces opposées en deux points font tourner uke autour de son CG (de-ashi-barai, o-soto-gari, uchi-mata)', 'Levier : un point d\'appui et une force à distance (seoi-nage, o-goshi, tai-otoshi)', 'Conséquence : le couple dépend surtout du timing, le levier exige d\'entrer sous le CG de uke'], bareme: 1, n: 'staps' },
+  { q: 'Décrivez le profil énergétique d\'un combat de judo et ses conséquences pour l\'entraînement.', corrige: ['4 min effectives, séquences de 20-30 s d\'effort pour 5-10 s de pause (2:1 à 3:1)', 'Filières anaérobies (attaques, lutte) et aérobie (récupération)', 'Conséquences : travail intermittent, randori à rotations, développement de la capacité aérobie et de la puissance'], bareme: 1, n: 'staps' },
+  { q: 'Présentez le protocole du Special Judo Fitness Test et son indice.', corrige: ['2 uke à 6 m, projections en ippon-seoi-nage', '3 séries : 15 s, 30 s, 30 s, avec 10 s de récupération', 'Indice = (FC fin + FC 1 min après) / nombre total de projections ; plus il est bas, meilleure est la condition'], bareme: 1, n: 'staps' },
+  { q: 'Construisez une situation d\'apprentissage pour faire découvrir les immobilisations à des débutants (but, dispositif, consignes, critères de réalisation et de réussite, variable).', corrige: ['But : maintenir uke sur le dos (ex. 20 s)', 'Dispositif : binômes de même gabarit, départ tori en contrôle', 'Consignes : uke tente de sortir, tape pour arrêter', 'Critères de réalisation : jambes écartées, poids sur la poitrine, bras de uke contrôlé', 'Critère de réussite : tenir 20 s, ou sortir pour uke', 'Variable : durée, résistance de uke, position de départ'], bareme: 1, n: 'staps' },
+  { q: 'Justifiez la progression « du sol vers le debout » dans un cycle pour débutants.', corrige: ['Sécurité : pas de chute au sol', 'Opposition réelle possible tout de suite (randori au sol)', 'Temps nécessaire pour maîtriser les ukemi avant les projections', 'Motivation : le débutant combat dès la première séance'], bareme: 1, n: 'staps' },
+  { q: 'Comparez les formes de travail uchi-komi, kakari-geiko et randori selon le degré d\'opposition.', corrige: ['Uchi-komi : aucune opposition, uke passif', 'Kakari-geiko : uke défend sans attaquer', 'Randori : opposition libre (ou à thème)', 'Progression de la coopération vers l\'opposition'], bareme: 1, n: 'staps' },
+  { q: 'Expliquez pourquoi la chute roulée (mae mawari ukemi) protège le judoka, d\'un point de vue mécanique.', corrige: ['Augmente le temps et la surface de contact, donc diminue la force maximale (F × Δt = Δ(mv))', 'Trajet en diagonale épaule-hanche opposée : la colonne cervicale ne touche pas', 'Frappe du bras qui dissipe l\'énergie restante'], bareme: 1, n: 'staps' },
+];
+
+// Mélange déterministe/aléatoire
+export function melanger(arr, seed) {
+  const a = arr.slice();
+  let s = seed || Math.floor(Math.random() * 1e9);
+  const rnd = () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; };
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}

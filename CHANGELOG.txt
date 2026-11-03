@@ -1,0 +1,12 @@
+Judo Pro by C. Guilhem — journal des modifications
+
+v1.0.0 — 3 novembre 2026
+- Première version pour les cours de judo en L2 STAPS.
+- Programmations 24 et 12 séances (documents « Programmation Judo universitaire »), 4 niveaux, théorie en 5 minutes et mini-quiz par séance, liens vers la théorie STAPS.
+- Bibliothèque de techniques : chutes, projections, sol ; schémas animés, direction du kuzushi, points clés, erreurs, sécurité, éducatifs ; liens FIJ (animations 3D), YouTube ; médias personnels.
+- Tous les dessins remplaçables par une photo ou une vidéo (appareil photo ou album), modifiables à tout moment ; export pour publication.
+- Théorie : histoire, principes, analyse technique, biomécanique, physiologie, didactique, grades et kata, sécurité ; lexique, cartes mémoire, décodeur.
+- Arbitrage FIJ 2026 : règles, gestes, quiz, table de marque.
+- Quiz, écrit sur l'appareil, sujet et corrigé imprimables, banque de questions.
+- Groupe (import CSV, niveaux, appel, binômes, bilans, démonstration), évaluation /14 + /6, export CSV.
+- Chrono randori, jour/nuit, code professeur, sauvegarde, hors connexion.
