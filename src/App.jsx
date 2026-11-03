@@ -11,6 +11,7 @@ import { Groupe } from './views/Groupe.jsx';
 import { Evaluation } from './views/Evaluation.jsx';
 import { Reglages } from './views/Reglages.jsx';
 import { Chrono } from './views/Chrono.jsx';
+import { Staps } from './views/Staps.jsx';
 
 const TABS_PROF = [['seances', 'Séances', 'calendar'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help'], ['groupe', 'Groupe', 'users'], ['eval', 'Évaluation', 'clipboard'], ['regl', 'Réglages', 'settings']];
 const TABS_ETU = [['seances', 'Programme', 'calendar'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help']];
@@ -37,13 +38,15 @@ export default function App() {
     );
   }
   const prof = role === 'prof';
-  const tabs = prof ? TABS_PROF : TABS_ETU;
+  const staps = st.parcours === 'staps';
+  const base = prof ? TABS_PROF : TABS_ETU;
+  const tabs = staps ? [...base.slice(0, 5), ['obs', 'Observer', 'eye'], ...base.slice(5)] : base;
   return (
     <Ctx.Provider value={store}><RoleCtx.Provider value={prof}>
       <div className="app">
         <header className="top">
           <div className="top-row">
-            <div className="brand"><img src="icons/icon-192.png" alt="" /><div style={{ minWidth: 0 }}><b>Judo Pro</b> <small>by C. Guilhem · v{VERSION}</small><div className="tiny muted">{prof ? 'Espace professeur' : 'Espace étudiant'}</div></div></div>
+            <div className="brand"><img src="icons/icon-192.png" alt="" /><div style={{ minWidth: 0 }}><b>Judo Pro</b> <small>by C. Guilhem · v{VERSION}</small><div className="tiny muted">{prof ? 'Espace professeur' : 'Espace étudiant'} · {staps ? 'L2 STAPS' : 'SUAPS'}</div></div></div>
             <button className="iconbtn" onClick={() => setChrono(true)} aria-label="Chrono randori" title="Chrono randori"><Icon n="timer" /></button>
             <button className="iconbtn" onClick={() => upd((d) => { d.theme = d.theme === 'dark' ? 'light' : 'dark'; })} aria-label="Jour / nuit"><Icon n={st.theme === 'dark' ? 'sun' : 'moon'} /></button>
             <button className="iconbtn" onClick={() => choisir(null)} aria-label="Quitter" title={prof ? 'Se déconnecter' : 'Changer de profil'}><Icon n="logout" /></button>
@@ -56,6 +59,7 @@ export default function App() {
           {tab === 'theo' && <Theorie />}
           {tab === 'arb' && <Arbitrage />}
           {tab === 'quiz' && <Quiz prof={prof} />}
+          {staps && tab === 'obs' && <Staps />}
           {prof && tab === 'groupe' && <Groupe />}
           {prof && tab === 'eval' && <Evaluation />}
           {prof && tab === 'regl' && <Reglages />}

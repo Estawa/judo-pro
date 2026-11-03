@@ -19,7 +19,8 @@ export function Quiz({ prof }) {
 }
 
 function Entrainement() {
-  const [cfg, setCfg] = useState({ th: [], n: 'base', nb: 10 });
+  const { st } = useStore();
+  const [cfg, setCfg] = useState({ th: [], n: st.parcours === 'staps' ? 'tout' : 'base', nb: 10 });
   const [serie, setSerie] = useState(null);
   const pool = QCM.filter((q) => (cfg.n === 'tout' || q.n === cfg.n) && (!cfg.th.length || cfg.th.includes(q.th)));
   if (serie) return <Serie qs={serie} onEnd={() => setSerie(null)} />;
@@ -90,7 +91,7 @@ export function tirage(st, seed, contenu = 'base') {
 function Examen() {
   const { st, upd } = useStore();
   const [eleve, setEleve] = useState('');
-  const [contenu, setContenu] = useState('base');
+  const [contenu, setContenu] = useState(st.parcours === 'staps' ? 'tout' : 'base');
   const [ex, setEx] = useState(null);
   const [rep, setRep] = useState({});
   const [txt, setTxt] = useState({});
@@ -142,7 +143,7 @@ function Examen() {
 function Sujet() {
   const { st } = useStore();
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e6));
-  const [contenu, setContenu] = useState('base');
+  const [contenu, setContenu] = useState(st.parcours === 'staps' ? 'tout' : 'base');
   const [corr, setCorr] = useState(false);
   const s = useMemo(() => tirage(st, seed, contenu), [st.bareme, seed, contenu]);
   const b = st.bareme;

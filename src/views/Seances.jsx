@@ -8,6 +8,7 @@ import { Icon, Lvl, Seg, Modal, Back } from '../ui.jsx';
 import { TechDetail } from './Techniques.jsx';
 import { ChapitreView } from './Theorie.jsx';
 import { Chrono } from './Chrono.jsx';
+import { VOLET } from '../data/staps.js';
 
 const isEval = (prog, n) => { const p = PROGRAMMES[prog]; return n === p.theo || p.prat.includes(n) || n === p.bilan && prog === 'p24'; };
 const cap = (x) => (x ? x.charAt(0).toUpperCase() + x.slice(1) : x);
@@ -189,6 +190,7 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
               ) : th.quizTitre && <p className="small muted">{th.quizTitre}</p>}
             </div>
           )}
+          {st.parcours === 'staps' && VOLET[prog][s.n] && <VoletStaps n={s.n} prof={prof} />}
           {liens.length > 0 && (
             <div className="card">
               <h3>Pour aller plus loin (L2 STAPS)</h3>
@@ -237,6 +239,35 @@ function Appel({ n }) {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function VoletStaps({ n, prof }) {
+  const { st, upd } = useStore();
+  const prog = st.prog;
+  const [obj, tache] = VOLET[prog][n];
+  const iv = st.interv?.[prog]?.[n] || {};
+  const nom = (id) => { const e = st.eleves.find((x) => x.id === id); return e ? `${e.prenom} ${e.nom}` : '?'; };
+  const tog = (role, id) => upd((d) => { d.interv = d.interv || { p24: {}, p12: {} }; d.interv[prog] = d.interv[prog] || {}; const x = d.interv[prog][n] || {}; const l = x[role] || []; x[role] = l.includes(id) ? l.filter((y) => y !== id) : [...l, id]; d.interv[prog][n] = x; });
+  const nb = (id) => Object.values(st.interv?.[prog] || {}).reduce((a, x) => a + ((x.echauf || []).includes(id) ? 1 : 0) + ((x.situation || []).includes(id) ? 1 : 0), 0);
+  return (
+    <div className="card" style={{ borderColor: 'var(--ink)' }}>
+      <h3>Volet L2 STAPS</h3>
+      <p className="small"><b>Objectif de formation : </b>{obj}</p>
+      <p className="small"><b>Tâche des étudiants : </b>{tache}</p>
+      {[['echauf', 'Conduisent l\'échauffement'], ['situation', 'Conduisent une situation']].map(([r, l]) => (
+        <div key={r} style={{ marginTop: 8 }}>
+          <div className="small"><b>{l} : </b>{(iv[r] || []).length ? iv[r].map(nom).join(', ') : <span className="muted">personne</span>}</div>
+          {prof && st.eleves.length > 0 && (
+            <select value="" onChange={(e) => e.target.value && tog(r, e.target.value)} style={{ marginTop: 4 }}>
+              <option value="">Ajouter ou retirer un étudiant…</option>
+              {st.eleves.map((e) => <option key={e.id} value={e.id}>{(iv[r] || []).includes(e.id) ? '✓ ' : ''}{e.nom.toUpperCase()} {e.prenom} ({nb(e.id)} intervention(s))</option>)}
+            </select>
+          )}
+        </div>
+      ))}
+      <p className="tiny muted" style={{ marginTop: 8 }}>L'intervention se note dans Évaluation (critère C) ; l'onglet « Observer » contient la fiche de préparation et la fiche d'observation.</p>
     </div>
   );
 }

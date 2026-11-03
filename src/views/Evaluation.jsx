@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useStore, noteTheo, notePrat } from '../store.js';
+import { useStore, noteTheo, notePrat, grille } from '../store.js';
 import { GRILLE_PRATIQUE, DEMO, DUREE_RANDORI, PROGRAMMES } from '../data/programme.js';
 import { COURTES } from '../data/quiz.js';
 import { NIVEAUX, tech } from '../data/techniques.js';
 import { Icon, Lvl, Seg, download } from '../ui.jsx';
 
+export const maxP = (st) => grille(st).reduce((a, g) => a + g.total, 0);
+export const maxT = (st) => st.bareme.qcm * st.bareme.ptQcm + st.bareme.courtes * st.bareme.ptCourte;
 const v2 = (x) => (x === null || x === undefined || x === '' ? '—' : String(Math.round(x * 100) / 100).replace('.', ','));
 
 export function Evaluation() {
@@ -14,8 +16,8 @@ export function Evaluation() {
   return (
     <div>
       <h1 style={{ marginBottom: 2 }}>Évaluation</h1>
-      <div className="muted small" style={{ marginBottom: 10 }}>Pratique /14 (S{p.prat.join(' et S')}) + théorie /6 (S{p.theo}) = /20. Chaque étudiant est noté sur le programme de son niveau : un débutant peut obtenir 14/14.</div>
-      <div className="row no-print" style={{ marginBottom: 12 }}><Seg value={vue} onChange={setVue} options={[['prat', 'Pratique /14'], ['theo', 'Théorie /6'], ['recap', 'Récapitulatif']]} /></div>
+      <div className="muted small" style={{ marginBottom: 10 }}>{st.parcours === 'staps' ? `Parcours L2 STAPS : pratique et intervention pédagogique /${maxP(st)} (S${p.prat.join(' et S')}) + écrit /${maxT(st)} (S${p.theo}).` : `Pratique /${maxP(st)} (S${p.prat.join(' et S')}) + théorie /${maxT(st)} (S${p.theo}).`} Chaque étudiant est noté sur le programme de son niveau : un débutant peut obtenir la note maximale.</div>
+      <div className="row no-print" style={{ marginBottom: 12 }}><Seg value={vue} onChange={setVue} options={[['prat', (st.parcours === 'staps' ? 'Pratique et intervention /' : 'Pratique /') + maxP(st)], ['theo', 'Théorie /' + maxT(st)], ['recap', 'Récapitulatif']]} /></div>
       {!st.eleves.length ? <div className="card empty">Ajoutez d'abord vos étudiants dans l'onglet « Groupe ».</div> : (
         <>
           {vue === 'prat' && <Pratique />}
@@ -48,12 +50,12 @@ function Pratique() {
         <p className="small" style={{ marginTop: 6 }}><b>Démonstration attendue : </b>{DEMO[e.niveau]}</p>
         {(e.demo || []).length > 0 && <div className="row">{e.demo.map((t) => <span key={t} className="chip">{tech(t)?.nom}</span>)}{e.tokui && <span className="chip red">Tokui : {tech(e.tokui)?.nom}</span>}</div>}
       </div>
-      {GRILLE_PRATIQUE.map((ep) => (
+      {grille(st).map((ep) => (
         <div key={ep.epreuve} className="card">
           <div className="row between"><h3 style={{ margin: 0 }}>{ep.epreuve}</h3><span className="small muted">/{ep.total}</span></div>
           {ep.criteres.map((c) => (
             <div key={c.id} style={{ marginTop: 10 }}>
-              <div className="row between small"><span>{c.label}</span><b>{v2(g[c.id] ?? null)} / {c.max}</b></div>
+              <div className="row between small"><span>{c.label}</span><b>{v2(g[c.id] ?? null)} / {v2(c.max)}</b></div>
               <div className="row" style={{ gap: 4, marginTop: 4 }}>
                 {Array.from({ length: c.max * 2 + 1 }, (_, i) => i / 2).map((v) => (
                   <button key={v} className={'chip' + (g[c.id] === v ? ' on' : '')} onClick={() => set(c.id, v)} style={{ minWidth: 40, justifyContent: 'center' }}>{v2(v)}</button>
@@ -64,7 +66,7 @@ function Pratique() {
         </div>
       ))}
       <div className="card">
-        <div className="row between"><span>Note pratique</span><span className="total">{v2(tot)} / 14</span></div>
+        <div className="row between"><span>{st.parcours === 'staps' ? 'Note pratique et intervention' : 'Note pratique'}</span><span className="total">{v2(tot)} / {maxP(st)}</span></div>
         <label className="f" style={{ marginTop: 8 }}>Commentaire</label>
         <textarea rows={2} value={g.com || ''} onChange={(x) => set('com', x.target.value)} />
       </div>
@@ -90,7 +92,7 @@ function TheorieEval() {
               <div className="li" onClick={() => setOpen(open === e.id ? null : e.id)}>
                 <Lvl n={e.niveau} />
                 <div className="grow"><b>{e.nom.toUpperCase()}</b> {e.prenom}<div className="tiny muted">{!t ? 'Pas encore de note' : t.papier ? 'Copie papier' : `Copie sur l'appareil · QCM ${t.qcmBonnes}/${t.qcmTotal}`}{aCorriger ? ' · questions courtes à corriger' : ''}</div></div>
-                <b>{t ? v2(n) + ' / 6' : '—'}</b>
+                <b>{t ? v2(n) + ' / ' + maxT(st) : '—'}</b>
               </div>
               {open === e.id && (
                 <div className="card" style={{ margin: '4px 0 12px' }}>
@@ -124,8 +126,8 @@ function Recap() {
   const { st } = useStore();
   const rows = st.eleves.map((e) => { const p = notePrat(st, e.id), t = noteTheo(st, e.id); return { e, p, t, tot: p !== null && t !== null ? p + t : null }; });
   const exp = () => {
-    const out = [['nom', 'prenom', 'groupe', 'niveau', ...GRILLE_PRATIQUE.flatMap((g) => g.criteres.map((c) => c.id)), 'pratique_14', 'qcm_bonnes', 'courtes', 'theorie_6', 'total_20', 'commentaire']];
-    rows.forEach(({ e, p, t, tot }) => { const g = st.evalPrat[e.id] || {}; const th = st.evalTheo[e.id] || {}; out.push([e.nom, e.prenom, e.groupe || '', NIVEAUX[e.niveau].label, ...GRILLE_PRATIQUE.flatMap((x) => x.criteres.map((c) => v2(g[c.id] ?? ''))), v2(p), th.qcmBonnes ?? '', (th.courtes || []).map(v2).join(' + '), v2(t), v2(tot), (g.com || '').replace(/;/g, ',')]); });
+    const out = [['nom', 'prenom', 'groupe', 'niveau', ...grille(st).flatMap((g) => g.criteres.map((c) => c.id)), 'pratique_' + maxP(st), 'qcm_bonnes', 'courtes', 'theorie_' + maxT(st), 'total_' + (maxP(st) + maxT(st)), 'commentaire']];
+    rows.forEach(({ e, p, t, tot }) => { const g = st.evalPrat[e.id] || {}; const th = st.evalTheo[e.id] || {}; out.push([e.nom, e.prenom, e.groupe || '', NIVEAUX[e.niveau].label, ...grille(st).flatMap((x) => x.criteres.map((c) => v2(g[c.id] ?? ''))), v2(p), th.qcmBonnes ?? '', (th.courtes || []).map(v2).join(' + '), v2(t), v2(tot), (g.com || '').replace(/;/g, ',')]); });
     download('judo-pro-notes.csv', '﻿' + out.map((r) => r.join(';')).join('\n'), 'text/csv');
   };
   const moy = (k) => { const v = rows.map((r) => r[k]).filter((x) => x !== null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
@@ -138,11 +140,11 @@ function Recap() {
       <div className="print-only"><h2>Judo — notes {st.groupeNom}</h2></div>
       <div className="tablewrap">
         <table className="t">
-          <thead><tr><th>Étudiant</th><th>Niveau</th><th>Démo /7</th><th>Randori /5</th><th>Rôles /2</th><th>Pratique /14</th><th>Théorie /6</th><th>Total /20</th></tr></thead>
+          <thead><tr><th>Étudiant</th><th>Niveau</th>{grille(st).map((g) => <th key={g.epreuve}>{g.epreuve.split(' ')[1].replace(/[()]/g, '')} /{g.total}</th>)}<th>Pratique /{maxP(st)}</th><th>Théorie /{maxT(st)}</th><th>Total /{maxP(st) + maxT(st)}</th></tr></thead>
           <tbody>{rows.map(({ e, p, t, tot }) => {
             const g = st.evalPrat[e.id] || {};
             const sub = (ids) => (ids.some((k) => g[k] !== undefined) ? ids.reduce((a, k) => a + (g[k] || 0), 0) : null);
-            return <tr key={e.id}><td><b>{e.nom.toUpperCase()}</b> {e.prenom}</td><td>{NIVEAUX[e.niveau].label}</td><td>{v2(sub(['a1', 'a2', 'a3']))}</td><td>{v2(sub(['b1', 'b2', 'b3']))}</td><td>{v2(sub(['c1', 'c2']))}</td><td>{v2(p)}</td><td>{v2(t)}</td><td><b>{v2(tot)}</b></td></tr>;
+            return <tr key={e.id}><td><b>{e.nom.toUpperCase()}</b> {e.prenom}</td><td>{NIVEAUX[e.niveau].label}</td>{grille(st).map((gr) => <td key={gr.epreuve}>{v2(sub(gr.criteres.map((c) => c.id)))}</td>)}<td>{v2(p)}</td><td>{v2(t)}</td><td><b>{v2(tot)}</b></td></tr>;
           })}</tbody>
         </table>
       </div>

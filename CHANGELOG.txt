@@ -1,5 +1,12 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.1.0 — 3 novembre 2026
+- Choix du parcours dans Réglages : SUAPS / option notée ou L2 STAPS (barème d'écrit conseillé, passage à 12 séances proposé).
+- L2 STAPS : volet de formation dans chaque séance (objectif, tâche des étudiants) et désignation des intervenants (échauffement, situation).
+- Onglet « Observer » : fiche d'observation de randori (compteurs, chrono, efficacité, export CSV), fiche de préparation d'intervention, fiches vierges à imprimer.
+- Grille STAPS : démonstration /4, randori /3, intervention pédagogique /6, rôles sociaux /1 ; écrit /6 avec l'approfondissement STAPS.
+- Chapitre « Préparer et conduire une intervention », nouvelles questions de didactique.
+
 v1.0.0 — 3 novembre 2026
 - Première version pour les cours de judo en L2 STAPS.
 - Programmations 24 et 12 séances (documents « Programmation Judo universitaire »), 4 niveaux, théorie en 5 minutes et mini-quiz par séance, liens vers la théorie STAPS.

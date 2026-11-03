@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useStore, uid, noteTheo, notePrat } from '../store.js';
+import { maxP, maxT } from './Evaluation.jsx';
 import { NIVEAUX, TECHNIQUES, FAMILLES } from '../data/techniques.js';
 import { EXIGENCES_BILAN, PROGRAMMES, DEMO } from '../data/programme.js';
 import { Icon, Lvl, Seg, Modal, toast, download } from '../ui.jsx';
@@ -75,7 +76,7 @@ export function Groupe() {
                   <Lvl n={e.niveau} />
                   <div className="grow"><b>{e.nom.toUpperCase()}</b> {e.prenom} <span className="small muted">{e.groupe}</span>
                     <div className="tiny muted">Présences {pres(e.id)}{e.tokui ? ' · tokui-waza : ' + (TECHNIQUES.find((x) => x.id === e.tokui)?.nom || '') : ''}</div></div>
-                  <div className="small" style={{ textAlign: 'right' }}>{p !== null || t !== null ? <b>{((p || 0) + (t || 0)).toString().replace('.', ',')} / 20</b> : <span className="muted">—</span>}</div>
+                  <div className="small" style={{ textAlign: 'right' }}>{p !== null || t !== null ? <b>{((p || 0) + (t || 0)).toString().replace('.', ',')} / {maxP(st) + maxT(st)}</b> : <span className="muted">—</span>}</div>
                 </div>
               );
             })}
@@ -139,6 +140,7 @@ function FicheEleve({ id, onDelete }) {
         <div className="row">{accessibles.map((t) => <button key={t.id} className={'chip' + ((e.demo || []).includes(t.id) ? ' on' : '')} onClick={() => togDemo(t.id)}>{t.nom}</button>)}</div>
       </div>
       <div><label className="f">Notes</label><textarea rows={3} value={e.notes || ''} onChange={(x) => set('notes', x.target.value)} /></div>
+      {st.parcours === 'staps' && (() => { const l = Object.entries(st.interv[prog] || {}).flatMap(([n, x]) => [...(x.echauf || []).includes(id) ? [`S${n} échauffement`] : [], ...(x.situation || []).includes(id) ? [`S${n} situation`] : []]); return <div className="small"><b>Interventions prévues : </b>{l.length ? l.join(' · ') : 'aucune'}</div>; })()}
       {hist.length > 0 && <div className="small muted">Appels : {hist.map(([n, v]) => `S${n} ${{ p: 'présent', a: 'absent', d: 'dispensé' }[v]}`).join(' · ')}</div>}
       <button className="btn ghost" style={{ color: 'var(--accent)' }} onClick={() => { if (confirm(`Supprimer ${e.prenom} ${e.nom} et ses notes ?`)) { upd((d) => { d.eleves = d.eleves.filter((x) => x.id !== id); delete d.evalPrat[id]; delete d.evalTheo[id]; }); onDelete(); } }}><Icon n="trash" />Supprimer cet étudiant</button>
     </div>

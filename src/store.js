@@ -1,11 +1,14 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { GRILLE_PRATIQUE } from './data/programme.js';
+import { GRILLE_STAPS } from './data/staps.js';
+export const grille = (st) => (st.parcours === 'staps' ? GRILLE_STAPS : GRILLE_PRATIQUE);
 
 const KEY = 'judopro-v1';
 export const DEFAULT = {
   v: 1, pin: '1234', theme: 'light', prog: 'p24', annee: '', dateDebut: '', groupeNom: 'L2 STAPS',
   dates: { p24: {}, p12: {} }, faites: { p24: {}, p12: {} }, notesSeance: { p24: {}, p12: {} },
   eleves: [], appel: { p24: {}, p12: {} }, evalPrat: {}, evalTheo: {}, videos: {}, favoris: [],
-  niveauVue: 'tous', bareme: { qcm: 8, ptQcm: 0.5, courtes: 2, ptCourte: 1 },
+  niveauVue: 'tous', parcours: 'suaps', interv: { p24: {}, p12: {} }, obs: [], bareme: { qcm: 8, ptQcm: 0.5, courtes: 2, ptCourte: 1 },
 };
 
 function load() {
@@ -39,6 +42,8 @@ export function noteTheo(st, id) {
 }
 export function notePrat(st, id) {
   const p = st.evalPrat[id]; if (!p) return null;
-  const v = Object.entries(p).filter(([k]) => /^[abc]\d$/.test(k)).reduce((a, [, x]) => a + (Number(x) || 0), 0);
+  const crit = grille(st).flatMap((g) => g.criteres);
+  if (!crit.some((c) => p[c.id] !== undefined)) return null;
+  const v = crit.reduce((a, c) => a + Math.min(c.max, Number(p[c.id]) || 0), 0);
   return Math.round(v * 100) / 100;
 }

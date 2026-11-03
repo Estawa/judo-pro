@@ -2,7 +2,8 @@
 
 Application web (PWA, hors connexion) pour préparer, conduire et évaluer un cycle de judo en L2 STAPS :
 programmations de 24 et 12 séances en 4 niveaux, techniques avec schémas animés remplaçables par vos photos et vidéos,
-théorie STAPS, arbitrage FIJ 2026, quiz et écrit, groupe, appel, binômes, évaluation /14 + /6.
+théorie STAPS, arbitrage FIJ 2026, quiz et écrit, groupe, appel, binômes, évaluation.
+Deux parcours (Réglages) : SUAPS / option notée, ou L2 STAPS (volet de formation, observation, intervention pédagogique notée).
 
 Notice complète : `docs/Notice_Judo_Pro.pdf`.
 

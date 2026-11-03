@@ -220,6 +220,39 @@ export const CHAPITRES = [
     retenir: ['Uchi-komi / nage-komi / randori', 'Progression : sol → debout, coopération → opposition', 'Critères de réalisation ≠ critères de réussite'],
   },
   {
+    id: 'intervention', titre: 'Préparer et conduire une intervention', niveau: 'staps',
+    resume: 'Construire, conduire et réguler une situation d\'apprentissage devant un groupe : la compétence évaluée en STAPS.',
+    sections: [
+      { t: 'Avant : préparer', l: [
+        'Partir du public : niveau (débutants, gradés, mixte), effectif, gabarits, place disponible sur le tapis.',
+        'Choisir UN objectif d\'apprentissage formulé en comportement observable (ex. « déséquilibrer uke vers l\'arrière avant de faucher »).',
+        'Traduire l\'objectif en but pour les élèves (ce qu\'ils doivent obtenir) et en critères de réussite chiffrés (ex. « 3 chutes sur 5 »).',
+        'Prévoir le dispositif : binômes ou trios, rôles (tori, uke, observateur), espace, durée, rotations.',
+        'Écrire les critères de réalisation (2 ou 3 au maximum) et les variables pour simplifier ou complexifier.',
+        'Lister les règles de sécurité propres à la situation.',
+      ] },
+      { t: 'Pendant : conduire', l: [
+        'Regrouper, présenter en moins de 2 minutes : but, consignes, sécurité ; une démonstration vaut mieux qu\'un long discours.',
+        'Se placer pour voir tout le groupe (dos au mur, jamais au centre en tournant le dos).',
+        'Lancer vite l\'activité, puis observer avant d\'intervenir.',
+        'Donner des retours courts et ciblés sur un critère de réalisation ; valoriser ce qui réussit.',
+        'Faire évoluer la difficulté par une variable (opposition de uke, vitesse, temps, nombre de techniques) selon les réussites.',
+        'Gérer le temps : annoncer les rotations, arrêter avant la lassitude.',
+      ] },
+      { t: 'Après : bilan et justification', l: [
+        'Faire verbaliser les élèves : « qu\'est-ce qui vous a permis de réussir ? »',
+        'Évaluer l\'atteinte de l\'objectif à partir des critères de réussite et des observations.',
+        'Justifier ses choix devant l\'enseignant : lien avec les principes techniques (kuzushi, action-réaction…), le niveau du public, la sécurité.',
+      ] },
+      { t: 'Les types de retour (feedback)', tab: { h: ['Type', 'Exemple'], r: [
+        ['Descriptif', '« Ton pied d\'appui est loin de celui de uke. »'], ['Prescriptif', '« Pose ton pied gauche à côté de son pied droit. »'],
+        ['Interrogatif', '« Où était le poids de uke quand tu as fauché ? »'], ['Approbatif', '« Oui, là il était sur son talon : c\'est ça qu\'on cherche. »'],
+      ] } },
+      { t: 'Observer pour réguler', p: ['La fiche d\'observation de l\'onglet « Observer » donne des données objectives : nombre et direction des attaques, projections réussies, liaisons au sol. L\'efficacité (projections ÷ attaques) et la fréquence des attaques permettent de comparer deux randori et de fixer un objectif à l\'élève observé.'] },
+    ],
+    retenir: ['Un objectif, un but, des critères de réussite chiffrés', '2 ou 3 critères de réalisation, pas plus', 'Observer avant d\'intervenir, faire évoluer une variable'],
+  },
+  {
     id: 'grades', titre: 'Grades, kata et organisation', niveau: 'base',
     resume: 'Ceintures, dan, les kata du Kodokan et les catégories de poids.',
     sections: [
@@ -269,13 +302,13 @@ export const CHAPITRES = [
 
 // Liens entre séances (programme 24) et chapitres de théorie à approfondir en L2 STAPS
 export const LIENS_STAPS_24 = {
-  1: ['histoire', 'securite'], 2: ['biomeca', 'principes'], 3: ['didactique'], 4: ['technique'], 5: ['technique'], 6: ['biomeca', 'technique'],
+  1: ['histoire', 'securite'], 2: ['biomeca', 'principes'], 3: ['didactique'], 4: ['technique', 'intervention'], 5: ['technique'], 6: ['biomeca', 'technique'],
   7: ['technique'], 8: ['didactique'], 9: ['physio'], 10: ['biomeca'], 11: ['biomeca', 'histoire'], 12: ['didactique'], 13: ['biomeca', 'grades'],
-  14: ['biomeca', 'technique'], 15: ['technique'], 16: ['securite'], 17: ['securite'], 18: ['securite', 'physio'], 19: ['physio'], 20: ['grades'], 21: ['didactique'],
+  14: ['biomeca', 'technique'], 15: ['technique'], 16: ['securite'], 17: ['securite'], 18: ['securite', 'physio'], 19: ['physio'], 20: ['grades'], 21: ['didactique', 'intervention'],
 };
 export const LIENS_STAPS_12 = {
-  1: ['histoire', 'securite'], 2: ['biomeca', 'principes'], 3: ['technique', 'didactique'], 4: ['biomeca', 'technique'], 5: ['didactique'], 6: ['biomeca'],
-  7: ['biomeca', 'didactique'], 8: ['technique', 'securite'], 9: ['securite', 'physio'], 10: ['grades'],
+  1: ['histoire', 'securite'], 2: ['biomeca', 'principes'], 3: ['technique', 'didactique'], 4: ['biomeca', 'technique'], 5: ['didactique', 'intervention'], 6: ['biomeca'],
+  7: ['biomeca', 'didactique'], 8: ['technique', 'securite', 'intervention'], 9: ['securite', 'physio'], 10: ['grades'],
 };
 
 export const GLOSSAIRE = [

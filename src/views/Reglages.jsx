@@ -4,6 +4,7 @@ import { SEANCES } from '../data/seances.js';
 import { Icon, Seg, toast, download } from '../ui.jsx';
 import { VERSION, CHANGELOG } from '../version.js';
 import { allIllus, exportIllus } from '../media.js';
+import { PARCOURS } from '../data/staps.js';
 
 export function Reglages() {
   const { st, upd, replace } = useStore();
@@ -31,7 +32,14 @@ export function Reglages() {
     <div className="stack">
       <h1>Réglages</h1>
       <div className="card">
-        <h3>Groupe et programmation</h3>
+        <h3>Parcours</h3>
+        <Seg value={st.parcours || 'suaps'} onChange={(v) => upd((d) => {
+          d.parcours = v;
+          if (confirm(`Appliquer aussi le barème d'écrit conseillé pour ${PARCOURS[v].label} (${PARCOURS[v].bareme.qcm} QCM à ${String(PARCOURS[v].bareme.ptQcm).replace('.', ',')} pt + ${PARCOURS[v].bareme.courtes} questions courtes à ${PARCOURS[v].bareme.ptCourte} pt) ?`)) d.bareme = { ...PARCOURS[v].bareme };
+          if (v === 'staps' && v !== st.parcours && st.prog === 'p24' && confirm('En STAPS, le cycle dure souvent un semestre. Passer à la programmation de 12 séances ?')) d.prog = 'p12';
+        })} options={[['suaps', 'SUAPS / option notée'], ['staps', 'L2 STAPS']]} />
+        <p className="tiny muted" style={{ marginTop: 6 }}>{(st.parcours || 'suaps') === 'staps' ? 'L2 STAPS : volet de formation dans chaque séance (objectif, tâche, intervenants), onglet « Observer » (fiche d\'observation, préparation d\'intervention), évaluation avec intervention pédagogique notée, écrit incluant l\'approfondissement STAPS. Vérifiez la fiche de l\'UE (modalités de contrôle) : barème et grilles restent ajustables.' : 'SUAPS / option notée : pratique /14 + théorie /6, écrit sur la fiche théorie.'}</p>
+        <h3 style={{ marginTop: 14 }}>Groupe et programmation</h3>
         <div className="grid g2">
           <div><label className="f">Nom du groupe</label><input type="text" value={st.groupeNom} onChange={(e) => upd((d) => { d.groupeNom = e.target.value; })} /></div>
           <div><label className="f">Programmation</label><Seg value={st.prog} onChange={(v) => upd((d) => { d.prog = v; })} options={[['p24', '24 séances (année)'], ['p12', '12 séances (semestre)']]} /></div>
