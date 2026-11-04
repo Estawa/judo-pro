@@ -9,6 +9,7 @@ import { TechDetail } from './Techniques.jsx';
 import { ChapitreView } from './Theorie.jsx';
 import { Chrono } from './Chrono.jsx';
 import { VOLET } from '../data/staps.js';
+import { FondamentauxSeance } from './Fondamentaux.jsx';
 
 const isEval = (prog, n) => { const p = PROGRAMMES[prog]; return n === p.theo || p.prat.includes(n) || n === p.bilan && prog === 'p24'; };
 const cap = (x) => (x ? x.charAt(0).toUpperCase() + x.slice(1) : x);
@@ -174,6 +175,7 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
               <p className="tiny muted" style={{ marginTop: 8 }}>Touchez une technique pour voir le schéma animé, les points clés et les vidéos.</p>
             </div>
           )}
+          <FondamentauxSeance prog={prog} n={s.n} onOpen={() => window.dispatchEvent(new CustomEvent('goto-tab', { detail: 'fond' }))} />
           {th && (
             <div className="card">
               <h3>Théorie en 5 minutes : {th.titre}</h3>

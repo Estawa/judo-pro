@@ -1,5 +1,11 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.2.0 — 4 novembre 2026
+- Onglet « Fondamentaux » : les 4 immobilisations de base (position, contrôle, retournement qui y mène, sortie, passage), le circuit des immobilisations, les 4 retournements de uke à quatre pattes, les familles de techniques debout (te, koshi, ashi, ma-sutemi, yoko-sutemi) et du sol avec une technique de référence, l'opposition au sol et debout, la place de chaque fondamental dans le cycle.
+- Nouveaux retournements : par la jambe, par la tête, en roulant avec crochet (avec schémas).
+- Tous les nouveaux schémas sont remplaçables par une photo ou une vidéo (appareil photo ou galerie), comme les précédents.
+- Séances de sol complétées ; encart « Fondamentaux du cycle abordés » dans chaque séance ; nouvelles questions de quiz.
+
 v1.1.0 — 3 novembre 2026
 - Choix du parcours dans Réglages : SUAPS / option notée ou L2 STAPS (barème d'écrit conseillé, passage à 12 séances proposé).
 - L2 STAPS : volet de formation dans chaque séance (objectif, tâche des étudiants) et désignation des intervenants (échauffement, situation).

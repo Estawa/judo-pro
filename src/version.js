@@ -1,5 +1,11 @@
-export const VERSION = '1.1.0';
+export const VERSION = '1.2.0';
 export const CHANGELOG = [
+  { v: '1.2.0', d: '4 novembre 2026', l: [
+    'Nouvel onglet « Fondamentaux » : les 4 immobilisations de base (position, contrôle, retournement qui y mène, sortie, passage de l\'une à l\'autre), les retournements de uke à quatre pattes, les familles de techniques debout avec une technique de référence chacune, les familles du sol, l\'opposition au sol et debout (règles, étapes, situations) et la place de chaque fondamental dans le cycle.',
+    'Trois retournements ajoutés (par la jambe, par la tête, en roulant avec crochet) avec leurs schémas.',
+    'Séances de sol complétées : découverte des 4 immobilisations dès le début du cycle, quatre façons de renverser uke à quatre pattes.',
+    'Encart « Fondamentaux du cycle abordés » dans chaque séance ; nouvelles questions de quiz.',
+  ] },
   { v: '1.1.0', d: '3 novembre 2026', l: [
     'Choix du parcours dans Réglages : SUAPS / option notée ou L2 STAPS (barème d\'écrit conseillé et passage à 12 séances proposés).',
     'L2 STAPS : volet de formation dans chaque séance (objectif de formation, tâche des étudiants) et désignation des étudiants qui conduisent l\'échauffement ou une situation.',

@@ -205,6 +205,8 @@ const SOL = {
   'sol-tate': { cap: 'Tori à cheval sur uke, dans le même axe, poids bas ; contrôle de la tête et d\'un bras', tori: [110, 108, 0, 'genoux', 'haut'], uke: [110, 112, 0, 'droit', 'haut'], p: [[110, 96]], top: true },
   'sol-juji': { cap: 'Tori perpendiculaire (en croix), bassin contre l\'épaule de uke, jambes sur la poitrine, bras de uke tendu, pouce vers le haut', tori: [54, 80, -90, 'droit', 'serre'], uke: [128, 108, 0, 'droit', 'tendu'], p: [[90, 72]] },
   'sol-dos': { cap: 'Tori dans le dos de uke, poitrine contre son dos ; avant-bras sur le côté du cou, jamais sur la trachée', tori: [110, 130, 0, 'ecart', 'avant'], uke: [110, 100, 0, 'plie', 'cote'], p: [[110, 56]], ukeTop: true },
+  'sol-tortue-tete': { cap: 'Uke à quatre pattes ; tori face à sa tête, poitrine sur ses épaules, un bras sous l\'aisselle jusqu\'à la ceinture : il roule sur le côté du bras bloqué', tori: [128, 36, 180, 'genoux', 'avant'], uke: [128, 120, 0, 'genoux', 'serre'], p: [[128, 80]] },
+  'sol-tortue-dos': { cap: 'Uke à quatre pattes ; tori derrière et sur le côté, poitrine sur son dos, pied crocheté à l\'intérieur de la cuisse de uke : il roule sur l\'épaule en entraînant uke', tori: [96, 150, 20, 'plie', 'avant'], uke: [128, 100, 0, 'genoux', 'serre'], p: [[140, 135]] },
   'sol-tortue': { cap: 'Uke à quatre pattes, compact ; tori sur le côté, poitrine sur son dos, contrôle d\'un bras et de la ceinture', tori: [60, 104, 90, 'genoux', 'avant'], uke: [128, 104, 0, 'genoux', 'serre'], p: [[110, 110]] },
 };
 

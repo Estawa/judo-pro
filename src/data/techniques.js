@@ -463,6 +463,27 @@ export const TECHNIQUES = [
     erreurs: ['Rester au-dessus sans contrôler un bras', 'Lâcher après le retournement'], sorties: 'Uke reste compact, coudes aux genoux.', secu: 'Ne pas tordre le bras.', educ: ['Jeu « retourner la tortue »'],
   },
   {
+    id: 'retournement-jambe', nom: 'Retournement par la jambe', trad: 'Renverser uke à quatre pattes en saisissant sa jambe', fam: 'situation', niv: 'D', anim: 'sol-tortue',
+    desc: 'Uke est à quatre pattes. Tori, sur le côté, saisit le bras le plus proche et le genou (ou le pantalon) le plus éloigné, puis pousse avec la poitrine pour faire basculer uke sur le dos ; il s\'installe en yoko-shiho-gatame.',
+    points: ['Tori sur le côté de uke, poitrine sur son dos, genoux au sol', 'Main droite sous le ventre de uke, saisit le genou ou le pantalon côté opposé', 'Main gauche contrôle le bras le plus proche (au coude)', 'Tirer la jambe vers soi et pousser avec la poitrine : uke bascule sur le côté opposé', 'Suivre en restant collé : yoko-shiho-gatame (contrôle latéral)'],
+    erreurs: ['Tirer avec les bras sans pousser avec le corps', 'Laisser un espace pendant la bascule : uke se remet à plat ventre'], sorties: 'Uke écarte ses appuis et garde les coudes collés aux genoux.', secu: 'Ne pas tordre le genou de uke : saisir le pantalon ou l\'arrière du genou, sans torsion.', educ: ['Jeu « retourner la tortue » (30 s)', 'Enchaîner retournement puis immobilisation tenue 20 s'],
+    liaisons: 'Retournement par la jambe → yoko-shiho-gatame → kami-shiho-gatame.',
+  },
+  {
+    id: 'retournement-tete', nom: 'Retournement par la tête', trad: 'Renverser uke à quatre pattes en se plaçant devant lui', fam: 'situation', niv: 'I', anim: 'sol-tortue-tete',
+    desc: 'Tori est placé devant la tête de uke à quatre pattes. Il passe un bras sous l\'aisselle de uke, saisit la ceinture, bloque l\'autre bras et roule sur le côté en entraînant uke sur le dos ; il s\'installe en kami-shiho-gatame.',
+    points: ['Tori face à la tête de uke, poitrine sur ses épaules', 'Un bras passe sous l\'aisselle de uke et saisit sa ceinture', 'L\'autre main bloque le bras opposé de uke contre son corps', 'Rouler sur le côté du bras bloqué : uke ne peut pas mettre la main pour se rattraper', 'Revenir sur uke dans l\'axe : kami-shiho-gatame'],
+    erreurs: ['Rouler du mauvais côté (celui du bras libre de uke)', 'Appuyer sur la nuque de uke'], sorties: 'Uke garde les bras serrés et recule ses hanches.', secu: 'Aucune pression sur la nuque ou la tête de uke.', educ: ['Travail à vitesse lente, puis contre résistance progressive'],
+    liaisons: 'Retournement par la tête → kami-shiho-gatame → yoko-shiho-gatame.',
+  },
+  {
+    id: 'retournement-crochet', nom: 'Retournement en roulant (crochet de jambe)', trad: 'Renverser uke à quatre pattes en roulant avec lui', fam: 'situation', niv: 'I', anim: 'sol-tortue-dos',
+    desc: 'Tori est sur le côté arrière de uke. Il crochète l\'intérieur de la cuisse de uke avec son pied, saisit le revers ou le bras opposé, puis roule sur le dos en entraînant uke ; il termine au-dessus en tate-shiho-gatame ou dans le dos de uke.',
+    points: ['Tori derrière et sur le côté de uke, poitrine sur son dos', 'Le cou-de-pied crochète l\'intérieur de la cuisse de uke (côté éloigné)', 'Une main saisit le revers ou le bras opposé, l\'autre la ceinture', 'Rouler sur l\'épaule (et non sur la tête) en entraînant uke', 'Finir au-dessus : tate-shiho-gatame (contrôle à cheval)'],
+    erreurs: ['Rouler sans crochet : uke ne suit pas', 'Rouler sur la nuque'], sorties: 'Uke serre les genoux et bloque le pied qui crochète.', secu: 'Rouler sur l\'épaule, jamais sur la tête ; pas de do-jime (serrer le tronc avec les jambes), interdit.', educ: ['Décomposer : crochet seul, puis roulade seule, puis l\'ensemble'],
+    liaisons: 'Retournement en roulant → tate-shiho-gatame ; si uke se retourne : contrôle du dos.',
+  },
+  {
     id: 'sortie-pont', nom: 'Sortie par pont et rotation', trad: 'Sortir de kesa-gatame', fam: 'situation', niv: 'D', anim: 'sol-kesa',
     desc: 'Uke libère son bras, fait un pont puissant et roule vers l\'épaule de tori pour le renverser.',
     points: ['Récupérer son bras coincé', 'Coller son corps à tori', 'Pont sur les pieds (talons près des fesses)', 'Rotation vers l\'épaule de tori (là où il n\'a pas d\'appui)'],

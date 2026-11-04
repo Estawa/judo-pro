@@ -31,8 +31,8 @@ export const STRUCTURE = [
 
 // Contenus de fin d'année (programme 24) — liste dans laquelle l'étudiant choisit sa démonstration
 export const CONTENUS_NIVEAU = {
-  D: { ukemi: ['ushiro-ukemi', 'yoko-ukemi', 'mae-ukemi'], nage: ['o-soto-gari', 'o-uchi-gari', 'o-goshi', 'ippon-seoi-nage', 'de-ashi-barai'], katame: ['kesa-gatame', 'yoko-shiho-gatame', 'sortie-pont', 'retournement-bras-ceinture'], randori: 'Randori au sol libre, randori debout sans sacrifice' },
-  I: { ukemi: ['mae-mawari-ukemi'], nage: ['ko-uchi-gari', 'ko-soto-gari', 'uki-goshi', 'morote-seoi-nage', 'tai-otoshi', 'hiza-guruma', 'o-soto-gaeshi', 'tomoe-nage'], katame: ['kami-shiho-gatame', 'tate-shiho-gatame', 'ude-garami', 'hadaka-jime', 'passage-jambes'], randori: '1 combinaison, 1 enchaînement debout-sol' },
+  D: { ukemi: ['ushiro-ukemi', 'yoko-ukemi', 'mae-ukemi'], nage: ['o-soto-gari', 'o-uchi-gari', 'o-goshi', 'ippon-seoi-nage', 'de-ashi-barai'], katame: ['kesa-gatame', 'yoko-shiho-gatame', 'kami-shiho-gatame', 'tate-shiho-gatame', 'sortie-pont', 'retournement-bras-ceinture', 'retournement-jambe'], randori: 'Randori au sol libre, randori debout sans sacrifice' },
+  I: { ukemi: ['mae-mawari-ukemi'], nage: ['ko-uchi-gari', 'ko-soto-gari', 'uki-goshi', 'morote-seoi-nage', 'tai-otoshi', 'hiza-guruma', 'o-soto-gaeshi', 'tomoe-nage'], katame: ['retournement-tete', 'retournement-crochet', 'ude-garami', 'hadaka-jime', 'passage-jambes'], randori: '1 combinaison, 1 enchaînement debout-sol' },
   C: { ukemi: [], nage: ['harai-goshi', 'uchi-mata', 'sasae-tsuri-komi-ashi', 'ko-soto-gake', 'eri-seoi-nage', 'sumi-gaeshi', 'o-uchi-gaeshi', 'tsubame-gaeshi'], katame: ['juji-gatame', 'okuri-eri-jime', 'kata-ha-jime', 'kata-gatame'], randori: 'Tokui-waza + combinaison + contre ; arbitrage complet' },
   A: { ukemi: [], nage: ['hane-goshi', 'ura-nage', 'utsuri-goshi', 'okuri-ashi-barai', 'tani-otoshi', 'seoi-otoshi'], katame: ['kuzure-kesa-gatame'], randori: 'Système d\'attaque personnel ; arbitre central ; tutorat' },
 };

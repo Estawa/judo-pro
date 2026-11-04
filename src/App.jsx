@@ -12,9 +12,10 @@ import { Evaluation } from './views/Evaluation.jsx';
 import { Reglages } from './views/Reglages.jsx';
 import { Chrono } from './views/Chrono.jsx';
 import { Staps } from './views/Staps.jsx';
+import { Fondamentaux } from './views/Fondamentaux.jsx';
 
-const TABS_PROF = [['seances', 'Séances', 'calendar'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help'], ['groupe', 'Groupe', 'users'], ['eval', 'Évaluation', 'clipboard'], ['regl', 'Réglages', 'settings']];
-const TABS_ETU = [['seances', 'Programme', 'calendar'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help']];
+const TABS_PROF = [['seances', 'Séances', 'calendar'], ['fond', 'Fondamentaux', 'star'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help'], ['groupe', 'Groupe', 'users'], ['eval', 'Évaluation', 'clipboard'], ['regl', 'Réglages', 'settings']];
+const TABS_ETU = [['seances', 'Programme', 'calendar'], ['fond', 'Fondamentaux', 'star'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help']];
 
 const getRole = () => { try { return localStorage.getItem('judopro-role'); } catch (e) { return null; } };
 const setRoleLS = (r) => { try { r ? localStorage.setItem('judopro-role', r) : localStorage.removeItem('judopro-role'); } catch (e) { /* */ } };
@@ -27,6 +28,7 @@ export default function App() {
   const [chrono, setChrono] = useState(false);
   useEffect(() => { document.documentElement.dataset.theme = st.theme; }, [st.theme]);
   useEffect(() => { window.scrollTo(0, 0); }, [tab]);
+  useEffect(() => { const f = (e) => setTab(e.detail); window.addEventListener('goto-tab', f); return () => window.removeEventListener('goto-tab', f); }, []);
   const choisir = (r) => { setRole(r); setRoleLS(r); setTab(r === 'prof' ? 'seances' : 'tech'); };
 
   if (!role || role === 'pin') {
@@ -40,7 +42,7 @@ export default function App() {
   const prof = role === 'prof';
   const staps = st.parcours === 'staps';
   const base = prof ? TABS_PROF : TABS_ETU;
-  const tabs = staps ? [...base.slice(0, 5), ['obs', 'Observer', 'eye'], ...base.slice(5)] : base;
+  const tabs = staps ? [...base.slice(0, 6), ['obs', 'Observer', 'eye'], ...base.slice(6)] : base;
   return (
     <Ctx.Provider value={store}><RoleCtx.Provider value={prof}>
       <div className="app">
@@ -55,6 +57,7 @@ export default function App() {
         </header>
         <main>
           {tab === 'seances' && <Seances prof={prof} />}
+          {tab === 'fond' && <Fondamentaux prof={prof} />}
           {tab === 'tech' && <Techniques prof={prof} />}
           {tab === 'theo' && <Theorie />}
           {tab === 'arb' && <Arbitrage />}

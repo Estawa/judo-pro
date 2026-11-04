@@ -114,8 +114,8 @@ export const SEANCES = {
     ]
    ],
    "niveaux": {
-    "D": "kesa-gatame (contrôle en écharpe), une sortie par pont et rotation.",
-    "I": "kesa-gatame (contrôle en écharpe) et yoko-shiho-gatame (contrôle latéral par les quatre points), passage de l'un à l'autre, deux sorties.",
+    "D": "kesa-gatame (contrôle en écharpe), une sortie par pont et rotation. Découverte des 4 immobilisations de base : kesa-gatame (contrôle en écharpe), yoko-shiho-gatame (contrôle latéral par les quatre points), kami-shiho-gatame (contrôle par le haut des quatre points), tate-shiho-gatame (contrôle à cheval des quatre points).",
+    "I": "kesa-gatame (contrôle en écharpe) et yoko-shiho-gatame (contrôle latéral par les quatre points), passage de l'un à l'autre, deux sorties. Circuit des 4 immobilisations de base enchaînées sans lâcher le contact.",
     "C": "kami-shiho-gatame (contrôle par le haut des quatre points) et tate-shiho-gatame (contrôle à cheval des quatre points), enchaînement des quatre immobilisations.",
     "A": "kuzure-kesa-gatame (contrôle en écharpe modifiée), adaptation aux tentatives de sortie."
    },
@@ -160,7 +160,7 @@ export const SEANCES = {
     ],
     [
      "Thème commun (10 min)",
-     "principe du retournement : contrôler un bras ou une jambe, puis rouler uke sur le dos."
+     "principe du retournement : contrôler un bras ou une jambe, puis rouler uke sur le dos ; quatre façons de renverser uke à quatre pattes (bras-ceinture, jambe, tête, crochet), chacune menant à une des 4 immobilisations de base."
     ],
     [
      "Randori (25 min)",
@@ -168,8 +168,8 @@ export const SEANCES = {
     ]
    ],
    "niveaux": {
-    "D": "un retournement sur partenaire à quatre pattes (saisie bras et ceinture) puis kesa-gatame (contrôle en écharpe).",
-    "I": "deux retournements ; passage de jambes quand uke est sur le dos.",
+    "D": "un retournement sur partenaire à quatre pattes (saisie bras et ceinture) puis kesa-gatame (contrôle en écharpe). Second retournement : par la jambe, vers yoko-shiho-gatame (contrôle latéral).",
+    "I": "deux retournements ; passage de jambes quand uke est sur le dos. Retournements de uke à quatre pattes : par la tête (vers kami-shiho-gatame) et en roulant avec crochet de jambe (vers tate-shiho-gatame).",
     "C": "retournement lié à l'immobilisation adaptée, enchaînement si uke se dégage.",
     "A": "retournements contre défense active, rôle de conseiller auprès des débutants."
    },
@@ -194,8 +194,14 @@ export const SEANCES = {
     "quizTitre": "Quiz (sur S3) :"
    },
    "tech": [
-    "kesa-gatame",
     "retournement-bras-ceinture",
+    "retournement-jambe",
+    "retournement-tete",
+    "retournement-crochet",
+    "kesa-gatame",
+    "yoko-shiho-gatame",
+    "kami-shiho-gatame",
+    "tate-shiho-gatame",
     "passage-jambes"
    ]
   },
@@ -1289,8 +1295,8 @@ export const SEANCES = {
     ]
    ],
    "niveaux": {
-    "D": "ushiro ukemi (chute arrière) et yoko ukemi (chute latérale) debout ; kesa-gatame (contrôle en écharpe), une sortie par pont et rotation.",
-    "I": "mae mawari ukemi (chute avant roulée) des deux côtés ; kesa-gatame (contrôle en écharpe) et yoko-shiho-gatame (contrôle latéral par les quatre points), deux sorties.",
+    "D": "ushiro ukemi (chute arrière) et yoko ukemi (chute latérale) debout ; kesa-gatame (contrôle en écharpe), une sortie par pont et rotation. Découverte des 4 immobilisations de base : kesa-gatame (contrôle en écharpe), yoko-shiho-gatame (contrôle latéral par les quatre points), kami-shiho-gatame (contrôle par le haut des quatre points), tate-shiho-gatame (contrôle à cheval des quatre points).",
+    "I": "mae mawari ukemi (chute avant roulée) des deux côtés ; kesa-gatame (contrôle en écharpe) et yoko-shiho-gatame (contrôle latéral par les quatre points), deux sorties. Circuit des 4 immobilisations de base enchaînées sans lâcher le contact.",
     "C": "kuzushi (déséquilibre) en déplacement ; kami-shiho-gatame (contrôle par le haut des quatre points) et tate-shiho-gatame (contrôle à cheval des quatre points), enchaînement des quatre immobilisations.",
     "A": "relier kuzushi (déséquilibre), tsukuri (placement) et kake (exécution) sur son tokui-waza (technique spéciale) ; kuzure-kesa-gatame (contrôle en écharpe modifiée)."
    },
@@ -1338,7 +1344,7 @@ export const SEANCES = {
     ],
     [
      "Thème commun (10 min)",
-     "principe du retournement : contrôler un bras ou une jambe, puis rouler uke sur le dos."
+     "principe du retournement : contrôler un bras ou une jambe, puis rouler uke sur le dos ; quatre façons de renverser uke à quatre pattes (bras-ceinture, jambe, tête, crochet), chacune menant à une des 4 immobilisations de base."
     ],
     [
      "Randori (25 min)",
@@ -1346,8 +1352,8 @@ export const SEANCES = {
     ]
    ],
    "niveaux": {
-    "D": "un retournement sur partenaire à quatre pattes (saisie bras et ceinture) puis kesa-gatame (contrôle en écharpe).",
-    "I": "deux retournements ; passage de jambes quand uke est sur le dos.",
+    "D": "un retournement sur partenaire à quatre pattes (saisie bras et ceinture) puis kesa-gatame (contrôle en écharpe). Second retournement : par la jambe, vers yoko-shiho-gatame (contrôle latéral).",
+    "I": "deux retournements ; passage de jambes quand uke est sur le dos. Retournements de uke à quatre pattes : par la tête (vers kami-shiho-gatame) et en roulant avec crochet de jambe (vers tate-shiho-gatame).",
     "C": "retournement lié à l'immobilisation adaptée, enchaînement si uke se dégage.",
     "A": "retournements contre défense active, rôle de conseiller auprès des débutants."
    },
@@ -1372,8 +1378,14 @@ export const SEANCES = {
     "quizTitre": "Quiz (sur S2) :"
    },
    "tech": [
-    "kesa-gatame",
     "retournement-bras-ceinture",
+    "retournement-jambe",
+    "retournement-tete",
+    "retournement-crochet",
+    "kesa-gatame",
+    "yoko-shiho-gatame",
+    "kami-shiho-gatame",
+    "tate-shiho-gatame",
     "passage-jambes"
    ]
   },
