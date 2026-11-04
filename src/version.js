@@ -1,5 +1,9 @@
-export const VERSION = '1.2.0';
+export const VERSION = '1.2.1';
 export const CHANGELOG = [
+  { v: '1.2.1', d: '4 novembre 2026', l: [
+    'Import de la liste des étudiants depuis un fichier Excel (.xlsx et .xls), LibreOffice (.ods) ou CSV, sans connexion.',
+    'Import plus souple : ligne de titre au-dessus des en-têtes ignorée, colonne unique « Élève » (NOM Prénom) reconnue, niveaux écrits en toutes lettres acceptés, étudiants déjà présents non ajoutés deux fois.',
+  ] },
   { v: '1.2.0', d: '4 novembre 2026', l: [
     'Nouvel onglet « Fondamentaux » : les 4 immobilisations de base (position, contrôle, retournement qui y mène, sortie, passage de l\'une à l\'autre), les retournements de uke à quatre pattes, les familles de techniques debout avec une technique de référence chacune, les familles du sol, l\'opposition au sol et debout (règles, étapes, situations) et la place de chaque fondamental dans le cycle.',
     'Trois retournements ajoutés (par la jambe, par la tête, en roulant avec crochet) avec leurs schémas.',

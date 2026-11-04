@@ -1,5 +1,9 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.2.1 — 4 novembre 2026
+- Import des étudiants depuis Excel (.xlsx, .xls), LibreOffice (.ods) ou CSV, hors connexion.
+- Ligne de titre ignorée, colonne « Élève » (NOM Prénom) reconnue, niveaux en toutes lettres acceptés, doublons ignorés.
+
 v1.2.0 — 4 novembre 2026
 - Onglet « Fondamentaux » : les 4 immobilisations de base (position, contrôle, retournement qui y mène, sortie, passage), le circuit des immobilisations, les 4 retournements de uke à quatre pattes, les familles de techniques debout (te, koshi, ashi, ma-sutemi, yoko-sutemi) et du sol avec une technique de référence, l'opposition au sol et debout, la place de chaque fondamental dans le cycle.
 - Nouveaux retournements : par la jambe, par la tête, en roulant avec crochet (avec schémas).

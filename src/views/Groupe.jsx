@@ -5,20 +5,38 @@ import { NIVEAUX, TECHNIQUES, FAMILLES } from '../data/techniques.js';
 import { EXIGENCES_BILAN, PROGRAMMES, DEMO } from '../data/programme.js';
 import { Icon, Lvl, Seg, Modal, toast, download } from '../ui.jsx';
 import { melanger } from '../data/quiz.js';
+import { lireTableur } from '../tableur.js';
 
-export function parseCSV(text) {
-  const lines = text.replace(/\r/g, '').split('\n').map((l) => l.trim()).filter(Boolean);
-  if (!lines.length) return [];
-  const sep = (lines[0].match(/;/g) || []).length >= (lines[0].match(/,/g) || []).length ? ';' : ',';
-  const split = (l) => l.split(sep).map((x) => x.replace(/^"|"$/g, '').trim());
-  let head = split(lines[0]).map((h) => h.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''));
-  let start = 1;
-  let iN = head.findIndex((h) => h.startsWith('nom')), iP = head.findIndex((h) => h.startsWith('prenom')), iC = head.findIndex((h) => /classe|groupe/.test(h)), iL = head.findIndex((h) => h.startsWith('niveau'));
-  if (iN < 0 || iP < 0) { iN = 0; iP = 1; iC = 2; iL = -1; start = 0; }
-  return lines.slice(start).map(split).filter((c) => c[iN]).map((c) => {
-    const lv = iL >= 0 ? (c[iL] || '').toUpperCase()[0] : '';
-    return { id: uid(), nom: c[iN], prenom: c[iP] || '', groupe: iC >= 0 ? c[iC] || '' : '', niveau: 'DICA'.includes(lv) && lv ? lv : 'D', tokui: '', demo: [], bilan: { forts: ['', ''], axes: ['', ''] }, notes: '' };
-  });
+const sansAccent = (x) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+const nouvelEleve = (nom, prenom, groupe, lv) => ({ id: uid(), nom, prenom, groupe, niveau: 'DICA'.includes(lv) && lv ? lv : 'D', tokui: '', demo: [], bilan: { forts: ['', ''], axes: ['', ''] }, notes: '' });
+// « DUPONT Marie » ou « DE LA TOUR Jean-Paul » → nom en majuscules, puis prénom
+const couperNomPrenom = (x) => { const m = String(x).trim().split(/\s+/); let i = 0; while (i < m.length - 1 && m[i] === m[i].toUpperCase() && /\p{L}/u.test(m[i])) i++; return i ? [m.slice(0, i).join(' '), m.slice(i).join(' ')] : [m[0], m.slice(1).join(' ')]; };
+
+// Transforme les lignes d'un tableur (csv, xlsx, xls, ods) en étudiants, dans l'ordre du fichier
+export function lignesEnEleves(lignes) {
+  lignes = lignes.map((l) => l.map((x) => String(x ?? '').trim())).filter((l) => l.some(Boolean));
+  if (!lignes.length) return [];
+  // la ligne d'en-tête peut être précédée d'un titre : on la cherche dans les 10 premières lignes
+  let h = -1, iN = -1, iP = -1, iC = -1, iL = -1, iNP = -1;
+  for (let r = 0; r < Math.min(10, lignes.length); r++) {
+    const head = lignes[r].map(sansAccent);
+    const n = head.findIndex((x) => /^nom( de famille| d'usage)?$/.test(x) || x === 'nom eleve'), pr = head.findIndex((x) => /^prenom/.test(x));
+    const np = head.findIndex((x) => /^(eleve|eleves|nom et prenom|nom prenom|nom - prenom|etudiant|nom complet)$/.test(x));
+    if ((n >= 0 && pr >= 0) || np >= 0) {
+      h = r; iN = n; iP = pr; iNP = n >= 0 && pr >= 0 ? -1 : np;
+      iC = head.findIndex((x) => /classe|groupe|division|td/.test(x)); iL = head.findIndex((x) => /^niveau/.test(x));
+      break;
+    }
+  }
+  if (h < 0) { iN = 0; iP = 1; iC = lignes[0].length > 2 ? 2 : -1; }
+  return lignes.slice(h + 1).map((c) => {
+    let nom, prenom;
+    if (iNP >= 0) [nom, prenom] = couperNomPrenom(c[iNP] || '');
+    else if (h < 0 && lignes[0].length === 1) [nom, prenom] = couperNomPrenom(c[0] || '');
+    else { nom = c[iN] || ''; prenom = c[iP] || ''; }
+    const lv = iL >= 0 ? sansAccent(c[iL]).toUpperCase()[0] : '';
+    return nom ? nouvelEleve(nom, prenom, iC >= 0 ? c[iC] || '' : '', lv) : null;
+  }).filter(Boolean);
 }
 
 export function Groupe() {
@@ -36,12 +54,15 @@ export function Groupe() {
   const importer = (e) => {
     const file = e.target.files[0]; e.target.value = '';
     if (!file) return;
-    file.text().then((t) => {
-      const l = parseCSV(t);
+    lireTableur(file).then((lignes) => {
+      const l = lignesEnEleves(lignes);
       if (!l.length) { toast('Aucun étudiant trouvé dans le fichier'); return; }
-      upd((d) => { d.eleves.push(...l); });
-      toast(`${l.length} étudiant(s) importé(s), dans l'ordre du fichier`);
-    });
+      const deja = new Set(st.eleves.map((x) => sansAccent(x.nom + ' ' + x.prenom)));
+      const nouveaux = l.filter((x) => !deja.has(sansAccent(x.nom + ' ' + x.prenom)));
+      upd((d) => { d.eleves.push(...nouveaux); });
+      const doublons = l.length - nouveaux.length;
+      toast(`${nouveaux.length} étudiant(s) importé(s), dans l'ordre du fichier${doublons ? ` · ${doublons} déjà présent(s), ignoré(s)` : ''}`);
+    }).catch((err) => toast('Lecture impossible : ' + (err.message || 'format non reconnu')));
   };
   const exporter = () => {
     const rows = [['nom', 'prenom', 'groupe', 'niveau', 'presences', 'pratique_14', 'theorie_6', 'total_20']];
@@ -55,7 +76,7 @@ export function Groupe() {
         <div><h1 style={{ marginBottom: 2 }}>Groupe</h1><div className="muted small">{st.eleves.length} étudiant(s) · {nbSeances} appel(s) fait(s)</div></div>
         <div className="row">
           <button className="btn sm primary" onClick={() => setAjout(true)}><Icon n="plus" />Ajouter</button>
-          <label className="btn sm"><Icon n="upload" />Importer CSV<input type="file" accept=".csv,text/csv,text/plain" hidden onChange={importer} /></label>
+          <label className="btn sm"><Icon n="upload" />Importer (CSV, Excel, ODS)<input type="file" accept=".csv,.txt,.xlsx,.xls,.ods,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.oasis.opendocument.spreadsheet" hidden onChange={importer} /></label>
           <button className="btn sm" onClick={exporter} disabled={!st.eleves.length}><Icon n="download" />Exporter</button>
           <button className="btn sm" onClick={() => setBin(true)} disabled={st.eleves.length < 2}><Icon n="shuffle" />Binômes</button>
         </div>
@@ -64,7 +85,7 @@ export function Groupe() {
         <div className="row">
           <Seg value={f} onChange={setF} options={[['', `Tous (${st.eleves.length})`], ['D', `Débutants (${cpt('D')})`], ['I', `Inter. (${cpt('I')})`], ['C', `Confirmés (${cpt('C')})`], ['A', `Avancés (${cpt('A')})`]]} />
         </div>
-        <p className="tiny muted" style={{ marginTop: 8 }}>Import CSV : colonnes nom ; prénom ; classe (ou groupe), et éventuellement niveau (D, I, C, A). L'ordre du fichier est conservé, comme dans EPS Pro. Le niveau est fixé en S1 (test de positionnement) et réajustable en S{PROGRAMMES[prog].reajust}.</p>
+        <p className="tiny muted" style={{ marginTop: 8 }}>Import d'un fichier .csv, .xlsx, .xls (Excel) ou .ods (LibreOffice) : première feuille, colonnes Nom, Prénom, Classe (ou Groupe) et éventuellement Niveau (D, I, C, A ou Débutant, Intermédiaire…). Une seule colonne « Élève » au format « NOM Prénom » marche aussi. Une ligne de titre au-dessus des en-têtes est ignorée. L'ordre du fichier est conservé, comme dans EPS Pro ; un étudiant déjà présent n'est pas ajouté deux fois. Le niveau est fixé en S1 (test de positionnement) et réajustable en S{PROGRAMMES[prog].reajust}.</p>
       </div>
       <div className="card">
         {!list.length ? <div className="empty">Aucun étudiant. Ajoutez-les un par un ou importez votre fichier de classe.</div> : (
