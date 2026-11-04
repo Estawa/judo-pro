@@ -1,5 +1,10 @@
-export const VERSION = '1.2.1';
+export const VERSION = '1.3.0';
 export const CHANGELOG = [
+  { v: '1.3.0', d: '4 novembre 2026', l: [
+    'Fin d\'accès des étudiants : après la date de fin (ou dès que le professeur ferme l\'accès), l\'espace étudiant affiche « Accès terminé » et ne fonctionne plus, même sur un téléphone où l\'appli est installée et hors connexion.',
+    'Code professeur commun à tous les appareils (le code 1234 ne fonctionne plus) ; code personnel possible en plus sur un appareil.',
+    'Réglages : carte « Partager avec les étudiants » (lien, bouton Partager, Copier le lien) et état de l\'accès étudiant.',
+  ] },
   { v: '1.2.1', d: '4 novembre 2026', l: [
     'Import de la liste des étudiants depuis un fichier Excel (.xlsx et .xls), LibreOffice (.ods) ou CSV, sans connexion.',
     'Import plus souple : ligne de titre au-dessus des en-têtes ignorée, colonne unique « Élève » (NOM Prénom) reconnue, niveaux écrits en toutes lettres acceptés, étudiants déjà présents non ajoutés deux fois.',

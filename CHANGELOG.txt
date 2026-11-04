@@ -1,5 +1,10 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.3.0 — 4 novembre 2026
+- Fin d'accès des étudiants (date de fin et interrupteur dans config/acces.json) : « Accès terminé », même hors connexion.
+- Code professeur commun à tous les appareils ; code personnel possible sur un appareil.
+- Réglages : partager le lien de l'appli, état de l'accès étudiant.
+
 v1.2.1 — 4 novembre 2026
 - Import des étudiants depuis Excel (.xlsx, .xls), LibreOffice (.ods) ou CSV, hors connexion.
 - Ligne de titre ignorée, colonne « Élève » (NOM Prénom) reconnue, niveaux en toutes lettres acceptés, doublons ignorés.

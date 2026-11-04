@@ -7,13 +7,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const acces = JSON.parse(readFileSync(path.join(root, 'config/acces.json'), 'utf8'));
 const nodePaths = (process.env.NODE_PATH || '').split(':').filter(Boolean);
 let esbuild;
 try { esbuild = require('esbuild'); } catch (e) { esbuild = require(require.resolve('esbuild', { paths: nodePaths })); }
 mkdirSync(path.join(root, 'assets'), { recursive: true });
 await esbuild.build({
   entryPoints: [path.join(root, 'src/main.jsx')], bundle: true, minify: true, format: 'esm', target: ['es2020', 'safari15'],
-  outfile: path.join(root, 'assets/app.js'), jsx: 'automatic', define: { 'process.env.NODE_ENV': '"production"' }, nodePaths, legalComments: 'none',
+  outfile: path.join(root, 'assets/app.js'), jsx: 'automatic', define: { 'process.env.NODE_ENV': '"production"', __ACCES__: JSON.stringify(acces) }, nodePaths, legalComments: 'none',
 });
 await esbuild.build({ entryPoints: [path.join(root, 'src/styles.css')], bundle: true, minify: true, outfile: path.join(root, 'assets/app.css') });
 const v = readFileSync(path.join(root, 'src/version.js'), 'utf8').match(/VERSION = '([^']+)'/)[1];

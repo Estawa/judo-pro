@@ -23,3 +23,10 @@ sur un appareil restent prioritaires sur cet appareil).
 ## Modifier le code
 Sources dans `src/` (React). Reconstruire : `cd tools && npm install && npm run build`.
 Contenus : `src/data/` (séances, techniques, théorie, quiz, arbitrage, barèmes).
+
+## Accès des étudiants (config/acces.json)
+- `"etudiants": false` ferme l'espace étudiant (appliqué dès que le téléphone se connecte).
+- `"fin": "AAAA-MM-JJ"` : après cette date, l'espace étudiant ne fonctionne plus, même hors connexion.
+- `"message"` : texte affiché sur l'écran « Accès terminé ».
+- `"codeProf"` : empreinte SHA-256 de « judopro:<code> » (le code n'est jamais publié).
+Modifier le fichier sur GitHub (crayon, puis « Commit changes ») suffit : Vercel redéploie en une minute.

@@ -13,6 +13,7 @@ import { Reglages } from './views/Reglages.jsx';
 import { Chrono } from './views/Chrono.jsx';
 import { Staps } from './views/Staps.jsx';
 import { Fondamentaux } from './views/Fondamentaux.jsx';
+import { accesConnu, rafraichirAcces, accesEtudiantOuvert, empreinte, dateFr } from './acces.js';
 
 const TABS_PROF = [['seances', 'Séances', 'calendar'], ['fond', 'Fondamentaux', 'star'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help'], ['groupe', 'Groupe', 'users'], ['eval', 'Évaluation', 'clipboard'], ['regl', 'Réglages', 'settings']];
 const TABS_ETU = [['seances', 'Programme', 'calendar'], ['fond', 'Fondamentaux', 'star'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help']];
@@ -30,11 +31,20 @@ export default function App() {
   useEffect(() => { window.scrollTo(0, 0); }, [tab]);
   useEffect(() => { const f = (e) => setTab(e.detail); window.addEventListener('goto-tab', f); return () => window.removeEventListener('goto-tab', f); }, []);
   const choisir = (r) => { setRole(r); setRoleLS(r); setTab(r === 'prof' ? 'seances' : 'tech'); };
+  const [acces, setAcces] = useState(accesConnu);
+  useEffect(() => {
+    rafraichirAcces().then(setAcces);
+    const f = () => rafraichirAcces().then(setAcces);
+    window.addEventListener('online', f); document.addEventListener('visibilitychange', f);
+    return () => { window.removeEventListener('online', f); document.removeEventListener('visibilitychange', f); };
+  }, []);
+  const ouvert = accesEtudiantOuvert(acces);
+  const verifier = async (code) => (acces.codeProf && (await empreinte(code)) === acces.codeProf) || (!!st.pinPerso && code === st.pin) || (!acces.codeProf && code === st.pin);
 
-  if (!role || role === 'pin') {
+  if (!role || role === 'pin' || (role === 'etu' && !ouvert)) {
     return (
       <Ctx.Provider value={store}>
-        <Accueil pinMode={role === 'pin'} onEtudiant={() => choisir('etu')} onProf={() => setRole('pin')} onBack={() => setRole(null)} onOk={() => choisir('prof')} pin={st.pin} />
+        <Accueil pinMode={role === 'pin'} ferme={!ouvert} acces={acces} onEtudiant={() => choisir('etu')} onProf={() => setRole('pin')} onBack={() => setRole(null)} onOk={() => choisir('prof')} verifier={verifier} />
         <Toaster />
       </Ctx.Provider>
     );
@@ -75,37 +85,50 @@ export default function App() {
   );
 }
 
-function Accueil({ pinMode, onEtudiant, onProf, onBack, onOk, pin }) {
-  const [code, setCode] = useState(['', '', '', '']);
+function Accueil({ pinMode, ferme, acces, onEtudiant, onProf, onBack, onOk, verifier }) {
+  const [code, setCode] = useState('');
   const [err, setErr] = useState(false);
-  const refs = [useRef(), useRef(), useRef(), useRef()];
-  useEffect(() => { if (pinMode) setTimeout(() => refs[0].current?.focus(), 50); }, [pinMode]);
-  const type = (i, v) => {
-    v = v.replace(/\D/g, '').slice(-1);
-    const c = [...code]; c[i] = v; setCode(c); setErr(false);
-    if (v && i < 3) refs[i + 1].current?.focus();
-    if (c.every(Boolean)) {
-      if (c.join('') === pin) onOk(); else { setErr(true); setCode(['', '', '', '']); setTimeout(() => refs[0].current?.focus(), 50); }
-    }
+  const [busy, setBusy] = useState(false);
+  const ref = useRef();
+  useEffect(() => { if (pinMode) setTimeout(() => ref.current?.focus(), 50); }, [pinMode]);
+  const valider = async (e) => {
+    e && e.preventDefault();
+    if (!code) return;
+    setBusy(true);
+    const ok = await verifier(code);
+    setBusy(false);
+    if (ok) onOk(); else { setErr(true); setCode(''); setTimeout(() => ref.current?.focus(), 50); }
   };
   return (
     <div className="hero">
       <img src="icons/icon-512.png" alt="Judo Pro" />
       <div><h1>Judo Pro</h1><div className="muted">by C. Guilhem · v{VERSION}</div></div>
-      <p className="muted" style={{ maxWidth: 420 }}>Programmation, techniques, théorie, arbitrage et évaluation du judo en L2 STAPS.</p>
       {!pinMode ? (
-        <>
-          <button className="btn primary" style={{ padding: '13px 26px', fontSize: '1.05rem' }} onClick={onEtudiant}>Je suis étudiant</button>
-          <button className="linkbtn" onClick={onProf}>Tu es professeur ? Connexion ici</button>
-        </>
+        ferme ? (
+          <>
+            <div className="card" style={{ maxWidth: 420 }}>
+              <h2>Accès terminé</h2>
+              <p>{acces.message || 'Le cours de judo est terminé.'}</p>
+              <p className="small muted">L'espace étudiant n'est plus disponible{acces.fin && acces.etudiants !== false ? ` depuis le ${dateFr(acces.fin)}` : ''}. Vous pouvez désinstaller l'application.</p>
+            </div>
+            <button className="linkbtn" onClick={onProf}>Tu es professeur ? Connexion ici</button>
+          </>
+        ) : (
+          <>
+            <p className="muted" style={{ maxWidth: 420 }}>Programmation, techniques, théorie, arbitrage et évaluation du judo en L2 STAPS.</p>
+            <button className="btn primary" style={{ padding: '13px 26px', fontSize: '1.05rem' }} onClick={onEtudiant}>Je suis étudiant</button>
+            <button className="linkbtn" onClick={onProf}>Tu es professeur ? Connexion ici</button>
+          </>
+        )
       ) : (
-        <div className="card" style={{ width: '100%', maxWidth: 360 }}>
+        <form className="card" style={{ width: '100%', maxWidth: 360 }} onSubmit={valider}>
           <h2>Connexion professeur</h2>
-          <p className="small muted">Code d'accès à 4 chiffres</p>
-          <div className="pin">{code.map((c, i) => <input key={i} ref={refs[i]} type="password" inputMode="numeric" value={c} onChange={(e) => type(i, e.target.value)} onKeyDown={(e) => { if (e.key === 'Backspace' && !code[i] && i > 0) refs[i - 1].current?.focus(); }} aria-label={'Chiffre ' + (i + 1)} />)}</div>
+          <p className="small muted">Code d'accès</p>
+          <input ref={ref} type="password" inputMode="numeric" autoComplete="current-password" value={code} onChange={(e) => { setCode(e.target.value.trim()); setErr(false); }} aria-label="Code d'accès" style={{ fontSize: '1.4rem', textAlign: 'center', letterSpacing: '.3em' }} />
           {err && <p className="small" style={{ color: 'var(--accent)', marginTop: 8 }}>Code incorrect</p>}
-          <button className="linkbtn" style={{ marginTop: 12 }} onClick={onBack}>Je suis étudiant</button>
-        </div>
+          <button className="btn primary" type="submit" disabled={!code || busy} style={{ marginTop: 10, width: '100%', justifyContent: 'center' }}>Se connecter</button>
+          <button type="button" className="linkbtn" style={{ marginTop: 12 }} onClick={onBack}>{ferme ? 'Retour' : 'Je suis étudiant'}</button>
+        </form>
       )}
     </div>
   );

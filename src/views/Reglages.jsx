@@ -5,6 +5,7 @@ import { Icon, Seg, toast, download } from '../ui.jsx';
 import { VERSION, CHANGELOG } from '../version.js';
 import { allIllus, exportIllus } from '../media.js';
 import { PARCOURS } from '../data/staps.js';
+import { accesConnu, rafraichirAcces, accesEtudiantOuvert, dateFr } from '../acces.js';
 
 export function Reglages() {
   const { st, upd, replace } = useStore();
@@ -65,10 +66,10 @@ export function Reglages() {
       <div className="card">
         <h3>Accès et affichage</h3>
         <div className="row">
-          <input type="password" inputMode="numeric" maxLength={4} value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} placeholder="Nouveau code (4 chiffres)" style={{ maxWidth: 220 }} />
-          <button className="btn sm" disabled={pin.length !== 4} onClick={() => { upd((d) => { d.pin = pin; }); setPin(''); toast('Code d\'accès modifié'); }}><Icon n="lock" />Changer le code</button>
+          <input type="password" inputMode="numeric" maxLength={8} value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} placeholder="Code personnel (4 à 8 chiffres)" style={{ maxWidth: 240 }} />
+          <button className="btn sm" disabled={pin.length < 4} onClick={() => { upd((d) => { d.pin = pin; d.pinPerso = true; }); setPin(''); toast('Code personnel enregistré sur cet appareil'); }}><Icon n="lock" />Changer le code</button>
         </div>
-        <p className="tiny muted">Code par défaut : 1234. Les étudiants accèdent sans code aux techniques, à la théorie, à l'arbitrage et aux quiz.</p>
+        <p className="tiny muted">Votre code professeur fonctionne sur tous les appareils. Vous pouvez ajouter ici un code personnel, valable seulement sur cet appareil (pratique pour un code plus court sur votre téléphone). Les étudiants accèdent sans code à l'espace étudiant.</p>
         <div className="row" style={{ marginTop: 8 }}><span className="small">Thème</span><Seg value={st.theme} onChange={(v) => upd((d) => { d.theme = v; })} options={[['light', 'Jour'], ['dark', 'Nuit']]} /></div>
       </div>
       <div className="card">
@@ -79,6 +80,7 @@ export function Reglages() {
           <label className="btn sm"><Icon n="upload" />Restaurer<input type="file" accept="application/json,.json" hidden onChange={restaurer} /></label>
         </div>
       </div>
+      <Partage />
       <Illustrations />
       <div className="card">
         <h3>Journal des versions</h3>
@@ -107,6 +109,29 @@ function Illustrations() {
       <p className="small">{n === null ? '…' : n === 0 ? 'Aucun dessin remplacé pour l\'instant.' : `${n} dessin(s) remplacé(s) sur cet appareil.`}</p>
       <p className="small muted">Pour remplacer un dessin : ouvrez une technique ou un geste d'arbitrage, puis « Photo / vidéo » (appareil photo) ou « Album » (galerie, fichiers du PC). « Dessin » remet le schéma d'origine. Ces illustrations restent sur cet appareil. Pour qu'elles apparaissent aussi chez les étudiants et sur vos autres appareils, exportez-les et envoyez le fichier pour qu'il soit publié avec l'appli.</p>
       <button className="btn sm" onClick={exp} disabled={!n}><Icon n="download" />Exporter mes illustrations (zip)</button>
+    </div>
+  );
+}
+
+function Partage() {
+  const [a, setA] = useState(accesConnu);
+  useEffect(() => { rafraichirAcces().then(setA); }, []);
+  const lien = location.origin + location.pathname.replace(/index\.html$/, '');
+  const ouvert = accesEtudiantOuvert(a);
+  const copier = async () => { try { await navigator.clipboard.writeText(lien); toast('Lien copié'); } catch (e) { toast(lien); } };
+  const partager = async () => { try { await navigator.share({ title: 'Judo Pro', text: 'Appli du cours de judo : ouvrez le lien puis « Ajouter à l\'écran d\'accueil ».', url: lien }); } catch (e) { copier(); } };
+  return (
+    <div className="card">
+      <h3>Partager avec les étudiants</h3>
+      <p className="small">Lien de l'appli : <b style={{ wordBreak: 'break-all' }}>{lien}</b></p>
+      <div className="row">
+        <button className="btn sm primary" onClick={partager}><Icon n="external" />Partager</button>
+        <button className="btn sm" onClick={copier}><Icon n="link" />Copier le lien</button>
+      </div>
+      <p className="tiny muted" style={{ marginTop: 6 }}>Les étudiants ouvrent le lien, touchent « Je suis étudiant », puis l'installent (« Ajouter à l'écran d'accueil »). Pour un QR code à projeter : dans Chrome, menu ⋮ › Partager › Code QR.</p>
+      <h3 style={{ marginTop: 12 }}>Accès des étudiants</h3>
+      <p className="small"><b>{ouvert ? 'Ouvert' : 'Fermé'}</b>{a.etudiants === false ? ' (fermé manuellement)' : a.fin ? (ouvert ? ` jusqu'au ${dateFr(a.fin)} inclus` : ` depuis le ${dateFr(a.fin)}`) : ''}.</p>
+      <p className="tiny muted">Après la date de fin, l'espace étudiant affiche « Accès terminé » et ne fonctionne plus, même sur un téléphone où l'appli est installée et hors connexion. Pour fermer plus tôt ou changer la date, demandez-le (ou modifiez le fichier config/acces.json du dépôt GitHub) : dès qu'un téléphone se connecte à internet, l'accès se ferme. L'espace professeur reste toujours accessible avec votre code.</p>
     </div>
   );
 }
