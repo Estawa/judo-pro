@@ -1,5 +1,5 @@
 // Service worker : fonctionnement hors connexion (cache de l'appli)
-const CACHE = 'judopro-1.4.0-00a4e176';
+const CACHE = 'judopro-1.4.1-a138efd8';
 const FILES = ['./', 'index.html', 'assets/app.js', 'assets/app.css', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon.svg'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES))); });
 self.addEventListener('message', (e) => { if (e.data === 'skipWaiting') self.skipWaiting(); });

@@ -1,5 +1,8 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.4.1 — 5 novembre 2026
+- Séances : les techniques prévues dans une séance s'affichent toujours, quel que soit le niveau choisi (tai-otoshi en séance 9 de Prog Élèves et la chute avant roulée étaient masqués par le filtre « Débutant »).
+
 v1.4.0 — 5 novembre 2026
 - Troisième parcours « Prog Élèves » dans Réglages : l'appli prend trois formes (SUAPS, L2 STAPS, Prog Élèves).
 - Prog Élèves : 15 séances de 1 h 30 pour débutants (sol S1-S6, debout S7-S10, liaison et arbitrage S11-S13, évaluations S14-S15), déroulé minuté, critères de réussite, point didactique, techniques et théorie.

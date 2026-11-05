@@ -198,7 +198,7 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
             <div className="card">
               <h3>Techniques de la séance</h3>
               <div className="row">
-                {techs.filter((t) => niv === 'tous' || t.niv === niv || (niv !== 'tous' && 'DICA'.indexOf(t.niv) <= 'DICA'.indexOf(niv))).map((t) => (
+                {techs.map((t) => (
                   <button key={t.id} className="chip" onClick={() => setTechOpen(t.id)}><Lvl n={t.niv} />{t.nom}</button>
                 ))}
               </div>

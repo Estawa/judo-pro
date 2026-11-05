@@ -1,5 +1,8 @@
-export const VERSION = '1.4.0';
+export const VERSION = '1.4.1';
 export const CHANGELOG = [
+  { v: '1.4.1', d: '5 novembre 2026', l: [
+    'Séances : toutes les techniques prévues dans une séance s\'affichent désormais, quel que soit le niveau choisi (en Prog Élèves, tai-otoshi en séance 9 et la chute avant roulée étaient masqués par le filtre « Débutant »).',
+  ] },
   { v: '1.4.0', d: '5 novembre 2026', l: [
     'Troisième parcours dans Réglages : « Prog Élèves ». L\'appli prend trois formes selon le choix : SUAPS / option notée, L2 STAPS, Prog Élèves.',
     'Prog Élèves : progression de 15 séances de 1 h 30 pour un groupe débutant, présentée aux étudiants comme on la ferait avec des élèves (sol S1 à S6, debout S7 à S10, liaison et arbitrage S11 à S13, évaluations S14 et S15).',

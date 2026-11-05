@@ -90,7 +90,7 @@ H1('2. Onglet Séances (Programme côté étudiant)')
 IMGS(('seances.png', 'Liste des séances (SUAPS, 24 séances)'), ('fiche.png', 'Fiche d\'une séance'), ('prog-eleves.png', 'Liste des séances en Prog Élèves'))
 H2('Liste des séances')
 B('<b>24 séances / 12 séances</b> (parcours SUAPS et L2 STAPS) : choisit la programmation, reprise de vos documents « Programmation Judo universitaire ».',
-  '<b>Prog Élèves</b> : la liste affiche les 15 séances de la progression pour débutants, groupées en 5 étapes (entrer dans l\'activité S1-S3, maîtriser le sol S4-S6, apprendre à projeter S7-S10, relier et s\'opposer S11-S13, évaluer S14-S15). Le choix 24/12 et le filtre par niveau disparaissent : la progression est commune à tout le groupe.',
+  '<b>Prog Élèves</b> : la liste affiche les 15 séances de la progression pour débutants, groupées en 5 étapes (entrer dans l\'activité S1-S3, maîtriser le sol S4-S6, apprendre à projeter S7-S10, relier et s\'opposer S11-S13, évaluer S14-S15). Le choix 24/12 et le filtre par niveau disparaissent : la progression est commune à tout le groupe. Dans chaque séance, toutes les techniques prévues s\'affichent avec leur fiche (schéma animé, points clés, vidéos).',
   '<b>Cadre</b> : en SUAPS et L2 STAPS, principes, les 4 niveaux et structure type d\'une séance de 1 h 30. En Prog Élèves : public et finalité, contenus à acquérir, tableau de la progression générale, organisation type d\'une séance et règles de sécurité permanentes.',
   '<b>Voir le contenu du niveau</b> (Tous, Débutant, Inter., Confirmé, Avancé ; SUAPS et L2 STAPS) : met en avant le contenu du niveau choisi dans chaque fiche.',
   'Compteur et barre de progression des séances faites ; bouton <b>Prochaine séance</b> qui ouvre la première séance non faite.',
@@ -212,6 +212,7 @@ P('Toutes les données restent sur l\'appareil utilisé (aucun compte, aucun env
 
 H1('16. Chronologie des versions')
 T([['Version', 'Date', 'Contenu'],
+   ['1.4.1', '5 novembre 2026', 'Séances : toutes les techniques prévues dans une séance s\'affichent, quel que soit le niveau choisi (tai-otoshi en séance 9 de Prog Élèves et la chute avant roulée étaient masqués).'],
    ['1.4.0', '5 novembre 2026', 'Troisième parcours « Prog Élèves » : l\'appli prend trois formes (SUAPS, L2 STAPS, Prog Élèves). Progression de 15 séances pour débutants avec déroulé minuté et point didactique ; cadre, fondamentaux, groupe, évaluation pratique /12 et écrit /8 adaptés ; questions de didactique.'],
    ['1.3.0', '4 novembre 2026', 'Fin d\'accès des étudiants à une date choisie ou sur demande, même hors connexion ; code professeur commun ; partage du lien depuis Réglages.'],
    ['1.2.1', '4 novembre 2026', 'Import des étudiants depuis Excel (.xlsx, .xls), LibreOffice (.ods) ou CSV ; ligne de titre ignorée, colonne « Élève » reconnue, doublons ignorés.'],
