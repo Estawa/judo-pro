@@ -1,5 +1,11 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.4.0 — 5 novembre 2026
+- Troisième parcours « Prog Élèves » dans Réglages : l'appli prend trois formes (SUAPS, L2 STAPS, Prog Élèves).
+- Prog Élèves : 15 séances de 1 h 30 pour débutants (sol S1-S6, debout S7-S10, liaison et arbitrage S11-S13, évaluations S14-S15), déroulé minuté, critères de réussite, point didactique, techniques et théorie.
+- Pages adaptées : cadre de la progression, fondamentaux par séance, bilan S6 et démonstration attendue (Groupe), grille pratique /12, écrit /8 avec question de didactique.
+- Notice régénérée (tools/notice.py).
+
 v1.3.0 — 4 novembre 2026
 - Fin d'accès des étudiants (date de fin et interrupteur dans config/acces.json) : « Accès terminé », même hors connexion.
 - Code professeur commun à tous les appareils ; code personnel possible sur un appareil.

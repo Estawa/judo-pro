@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { QCM, COURTES, THEMES, melanger } from '../data/quiz.js';
 import { useStore } from '../store.js';
+import { PROGRAMMES } from '../data/programme.js';
 import { Icon, Seg, toast } from '../ui.jsx';
 
 export function Quiz({ prof }) {
@@ -80,7 +81,7 @@ function Serie({ qs, onEnd }) {
 export function tirage(st, seed, contenu = 'base') {
   const b = st.bareme;
   const qs = QCM.filter((q) => contenu === 'tout' || q.n === contenu);
-  const cs = COURTES.filter((q) => contenu === 'tout' || q.n === contenu);
+  const cs = st.parcours === 'eleves' ? COURTES.filter((q) => q.n === 'didac') : COURTES.filter((q) => q.n !== 'didac' && (contenu === 'tout' || q.n === contenu));
   const qcm = melanger(qs, seed).slice(0, b.qcm).map((q, i) => {
     const o = melanger(q.c.map((c, k) => ({ c, k })), seed + 31 * (i + 1));
     return { ...q, c: o.map((x) => x.c), r: o.findIndex((x) => x.k === q.r) };
@@ -161,7 +162,7 @@ function Sujet() {
       </div>
       <div className="card">
         <h2 style={{ marginBottom: 2 }}>Judo — évaluation théorique{corr ? ' — CORRIGÉ' : ''}</h2>
-        <div className="small">{st.groupeNom} · durée {st.prog === 'p12' ? 25 : 30} min · noté sur {total} · sujet n° {seed}</div>
+        <div className="small">{st.groupeNom} · durée {PROGRAMMES[st.prog]?.dureeEcrit || 30} min · noté sur {total} · sujet n° {seed}</div>
         {!corr && <div className="small" style={{ marginTop: 8 }}>Nom : ........................................ Prénom : .................................... Niveau : ..........</div>}
         <h3 style={{ marginTop: 14 }}>Partie 1 — QCM ({b.qcm} × {String(b.ptQcm).replace('.', ',')} pt) : cochez la bonne réponse</h3>
         {s.qcm.map((q, i) => (
@@ -194,7 +195,7 @@ function Banque() {
         <h3>QCM</h3>
         {QCM.filter((q) => !th || q.th === th).map((q, i) => (
           <div key={i} className="li qprint" style={{ display: 'block', cursor: 'default' }}>
-            <div className="row between"><b>{q.q}</b><span className={'chip ' + (q.n === 'staps' ? 'red' : 'green')}>{q.n === 'staps' ? 'STAPS' : 'Fiche'}</span></div>
+            <div className="row between"><b>{q.q}</b><span className={'chip ' + (q.n === 'fiche' || q.n === 'base' ? 'green' : 'red')}>{{ staps: 'STAPS', didac: 'Didactique' }[q.n] || 'Fiche'}</span></div>
             <div className="small">Réponse : <b>{q.c[q.r]}</b> — {q.e}</div>
           </div>
         ))}
@@ -204,7 +205,7 @@ function Banque() {
           <h3>Questions courtes et éléments de corrigé</h3>
           {COURTES.map((q, i) => (
             <div key={i} className="li qprint" style={{ display: 'block', cursor: 'default' }}>
-              <div className="row between"><b>{q.q}</b><span className={'chip ' + (q.n === 'staps' ? 'red' : 'green')}>{q.n === 'staps' ? 'STAPS' : 'Fiche'}</span></div>
+              <div className="row between"><b>{q.q}</b><span className={'chip ' + (q.n === 'fiche' || q.n === 'base' ? 'green' : 'red')}>{{ staps: 'STAPS', didac: 'Didactique' }[q.n] || 'Fiche'}</span></div>
               <ul className="small">{q.corrige.map((x) => <li key={x}>{x}</li>)}</ul>
             </div>
           ))}

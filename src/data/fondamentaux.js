@@ -103,7 +103,9 @@ export const OPPOSITION = {
 };
 
 // Où chaque fondamental est travaillé dans le cycle (numéros de séance)
+import { PLACE_P15 } from './progEleves.js';
 export const PLACE = {
+  p15: PLACE_P15,
   p24: { immos: [3, 4, 8, 12], retournements: [4, 8, 17], te: [11, 14], koshi: [10, 14], ashi: [6, 7, 13], masutemi: [16], yokosutemi: [16], solOpp: [1, 2, 3, 4, 5, 6, 7, 8], deboutOpp: [5, 9, 10, 13, 19, 20, 22] },
   p12: { immos: [2, 3, 5], retournements: [3, 5, 9], te: [6, 7], koshi: [6, 7], ashi: [4, 5, 7], masutemi: [8], yokosutemi: [8], solOpp: [1, 2, 3, 4], deboutOpp: [4, 5, 6, 7, 10] },
 };

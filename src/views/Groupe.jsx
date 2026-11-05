@@ -3,6 +3,8 @@ import { useStore, uid, noteTheo, notePrat } from '../store.js';
 import { maxP, maxT } from './Evaluation.jsx';
 import { NIVEAUX, TECHNIQUES, FAMILLES } from '../data/techniques.js';
 import { EXIGENCES_BILAN, PROGRAMMES, DEMO } from '../data/programme.js';
+import { SEANCES } from '../data/seances.js';
+import { DEMO_P15, EXIGENCES_BILAN_P15 } from '../data/progEleves.js';
 import { Icon, Lvl, Seg, Modal, toast, download } from '../ui.jsx';
 import { melanger } from '../data/quiz.js';
 import { lireTableur } from '../tableur.js';
@@ -65,7 +67,7 @@ export function Groupe() {
     }).catch((err) => toast('Lecture impossible : ' + (err.message || 'format non reconnu')));
   };
   const exporter = () => {
-    const rows = [['nom', 'prenom', 'groupe', 'niveau', 'presences', 'pratique_14', 'theorie_6', 'total_20']];
+    const rows = [['nom', 'prenom', 'groupe', 'niveau', 'presences', 'pratique_' + maxP(st), 'theorie_' + maxT(st), 'total_' + (maxP(st) + maxT(st))]];
     st.eleves.forEach((e) => { const p = notePrat(st, e.id), t = noteTheo(st, e.id); rows.push([e.nom, e.prenom, e.groupe, NIVEAUX[e.niveau].label, pres(e.id), p ?? '', t ?? '', p !== null && t !== null ? p + t : '']); });
     download('judo-pro-groupe.csv', '﻿' + rows.map((r) => r.join(';')).join('\n'), 'text/csv');
   };
@@ -149,7 +151,7 @@ function FicheEleve({ id, onDelete }) {
       <div><label className="f">Niveau</label><Seg value={e.niveau} onChange={(v) => set('niveau', v)} options={[['D', 'Débutant'], ['I', 'Intermédiaire'], ['C', 'Confirmé'], ['A', 'Avancé']]} /></div>
       <div className="card">
         <h3>Bilan de mi-parcours (S{PROGRAMMES[prog].bilan})</h3>
-        <p className="small muted">Exigence : {EXIGENCES_BILAN[e.niveau]}</p>
+        <p className="small muted">Exigence : {prog === 'p15' ? EXIGENCES_BILAN_P15 : EXIGENCES_BILAN[e.niveau]}</p>
         <div className="grid g2">
           <div><label className="f">Points forts</label>{[0, 1].map((i) => <input key={i} type="text" value={e.bilan?.forts?.[i] || ''} onChange={(x) => setB('forts', i, x.target.value)} style={{ marginBottom: 6 }} />)}</div>
           <div><label className="f">Axes de travail</label>{[0, 1].map((i) => <input key={i} type="text" value={e.bilan?.axes?.[i] || ''} onChange={(x) => setB('axes', i, x.target.value)} style={{ marginBottom: 6 }} />)}</div>
@@ -157,7 +159,7 @@ function FicheEleve({ id, onDelete }) {
       </div>
       <div className="card">
         <h3>Programme de démonstration choisi</h3>
-        <p className="small muted">{DEMO[e.niveau]}</p>
+        <p className="small muted">{prog === 'p15' ? DEMO_P15 : DEMO[e.niveau]}</p>
         <div className="row">{accessibles.map((t) => <button key={t.id} className={'chip' + ((e.demo || []).includes(t.id) ? ' on' : '')} onClick={() => togDemo(t.id)}>{t.nom}</button>)}</div>
       </div>
       <div><label className="f">Notes</label><textarea rows={3} value={e.notes || ''} onChange={(x) => set('notes', x.target.value)} /></div>
@@ -167,7 +169,7 @@ function FicheEleve({ id, onDelete }) {
     </div>
   );
 }
-const SEANCES_N = (prog) => Array.from({ length: prog === 'p24' ? 24 : 12 }, (_, i) => i + 1);
+const SEANCES_N = (prog) => SEANCES[prog].map((s) => s.n);
 
 function Binomes() {
   const { st } = useStore();

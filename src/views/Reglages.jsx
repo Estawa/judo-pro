@@ -37,13 +37,15 @@ export function Reglages() {
         <Seg value={st.parcours || 'suaps'} onChange={(v) => upd((d) => {
           d.parcours = v;
           if (confirm(`Appliquer aussi le barème d'écrit conseillé pour ${PARCOURS[v].label} (${PARCOURS[v].bareme.qcm} QCM à ${String(PARCOURS[v].bareme.ptQcm).replace('.', ',')} pt + ${PARCOURS[v].bareme.courtes} questions courtes à ${PARCOURS[v].bareme.ptCourte} pt) ?`)) d.bareme = { ...PARCOURS[v].bareme };
-          if (v === 'staps' && v !== st.parcours && st.prog === 'p24' && confirm('En STAPS, le cycle dure souvent un semestre. Passer à la programmation de 12 séances ?')) d.prog = 'p12';
-        })} options={[['suaps', 'SUAPS / option notée'], ['staps', 'L2 STAPS']]} />
-        <p className="tiny muted" style={{ marginTop: 6 }}>{(st.parcours || 'suaps') === 'staps' ? 'L2 STAPS : volet de formation dans chaque séance (objectif, tâche, intervenants), onglet « Observer » (fiche d\'observation, préparation d\'intervention), évaluation avec intervention pédagogique notée, écrit incluant l\'approfondissement STAPS. Vérifiez la fiche de l\'UE (modalités de contrôle) : barème et grilles restent ajustables.' : 'SUAPS / option notée : pratique /14 + théorie /6, écrit sur la fiche théorie.'}</p>
+          if (v === 'eleves') d.prog = 'p15';
+          else if (d.prog === 'p15') d.prog = v === 'staps' ? 'p12' : 'p24';
+          else if (v === 'staps' && v !== st.parcours && st.prog === 'p24' && confirm('En STAPS, le cycle dure souvent un semestre. Passer à la programmation de 12 séances ?')) d.prog = 'p12';
+        })} options={[['suaps', 'SUAPS / option notée'], ['staps', 'L2 STAPS'], ['eleves', 'Prog Élèves']]} />
+        <p className="tiny muted" style={{ marginTop: 6 }}>{st.parcours === 'eleves' ? 'Prog Élèves : progression de 15 séances pour un groupe débutant, présentée aux étudiants comme on la ferait avec des élèves (sol S1-S6, debout S7-S10, liaison et arbitrage S11-S13, évaluations S14-S15). Chaque séance donne un point didactique ; évaluation pratique /12 (démonstration, combat, arbitrage) + écrit /8 (QCM + question de didactique).' : (st.parcours || 'suaps') === 'staps' ? 'L2 STAPS : volet de formation dans chaque séance (objectif, tâche, intervenants), onglet « Observer » (fiche d\'observation, préparation d\'intervention), évaluation avec intervention pédagogique notée, écrit incluant l\'approfondissement STAPS. Vérifiez la fiche de l\'UE (modalités de contrôle) : barème et grilles restent ajustables.' : 'SUAPS / option notée : pratique /14 + théorie /6, écrit sur la fiche théorie.'}</p>
         <h3 style={{ marginTop: 14 }}>Groupe et programmation</h3>
         <div className="grid g2">
           <div><label className="f">Nom du groupe</label><input type="text" value={st.groupeNom} onChange={(e) => upd((d) => { d.groupeNom = e.target.value; })} /></div>
-          <div><label className="f">Programmation</label><Seg value={st.prog} onChange={(v) => upd((d) => { d.prog = v; })} options={[['p24', '24 séances (année)'], ['p12', '12 séances (semestre)']]} /></div>
+          <div><label className="f">Programmation</label>{st.prog === 'p15' ? <div className="small" style={{ paddingTop: 8 }}>15 séances (progression débutants, liée au parcours Prog Élèves)</div> : <Seg value={st.prog} onChange={(v) => upd((d) => { d.prog = v; })} options={[['p24', '24 séances (année)'], ['p12', '12 séances (semestre)']]} />}</div>
         </div>
         <h3 style={{ marginTop: 14 }}>Calendrier</h3>
         <div className="grid g2">
@@ -61,7 +63,7 @@ export function Reglages() {
           <div><label className="f">Questions courtes</label><input type="number" min="0" max="6" value={st.bareme.courtes} onChange={(e) => upd((d) => { d.bareme.courtes = Math.max(0, Number(e.target.value) || 0); })} /></div>
           <div><label className="f">Points par question courte</label><input type="number" min="0.5" step="0.5" value={st.bareme.ptCourte} onChange={(e) => upd((d) => { d.bareme.ptCourte = Number(e.target.value) || 1; })} /></div>
         </div>
-        <p className="tiny muted">Par défaut : 8 QCM à 0,5 pt + 2 questions courtes à 1 pt = 6 points.</p>
+        <p className="tiny muted">Par défaut : 8 QCM à 0,5 pt + 2 questions courtes à 1 pt = 6 points. Prog Élèves : 16 QCM à 0,25 pt + 1 question de didactique à 4 pt = 8 points.</p>
       </div>
       <div className="card">
         <h3>Accès et affichage</h3>

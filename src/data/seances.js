@@ -1,3 +1,4 @@
+import { SEANCES_P15 } from './progEleves.js';
 // Généré à partir des documents « Programmation Judo universitaire » (12 et 24 séances) et des mémos théorie de C. Guilhem
 export const SEANCES = {
  "p24": [
@@ -1862,3 +1863,5 @@ export const SEANCES = {
   }
  ]
 };
+
+SEANCES.p15 = SEANCES_P15;

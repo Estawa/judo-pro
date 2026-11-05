@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Ctx, RoleCtx, useStoreState } from './store.js';
+import { Ctx, RoleCtx, useStoreState, PARCOURS_LABEL } from './store.js';
 import { Icon, Toaster, Modal } from './ui.jsx';
 import { VERSION } from './version.js';
 import { Seances } from './views/Seances.jsx';
@@ -58,7 +58,7 @@ export default function App() {
       <div className="app">
         <header className="top">
           <div className="top-row">
-            <div className="brand"><img src="icons/icon-192.png" alt="" /><div style={{ minWidth: 0 }}><b>Judo Pro</b> <small>by C. Guilhem · v{VERSION}</small><div className="tiny muted">{prof ? 'Espace professeur' : 'Espace étudiant'} · {staps ? 'L2 STAPS' : 'SUAPS'}</div></div></div>
+            <div className="brand"><img src="icons/icon-192.png" alt="" /><div style={{ minWidth: 0 }}><b>Judo Pro</b> <small>by C. Guilhem · v{VERSION}</small><div className="tiny muted">{prof ? 'Espace professeur' : 'Espace étudiant'} · {PARCOURS_LABEL[st.parcours] || 'SUAPS'}</div></div></div>
             <button className="iconbtn" onClick={() => setChrono(true)} aria-label="Chrono randori" title="Chrono randori"><Icon n="timer" /></button>
             <button className="iconbtn" onClick={() => upd((d) => { d.theme = d.theme === 'dark' ? 'light' : 'dark'; })} aria-label="Jour / nuit"><Icon n={st.theme === 'dark' ? 'sun' : 'moon'} /></button>
             <button className="iconbtn" onClick={() => choisir(null)} aria-label="Quitter" title={prof ? 'Se déconnecter' : 'Changer de profil'}><Icon n="logout" /></button>

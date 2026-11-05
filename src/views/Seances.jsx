@@ -10,6 +10,9 @@ import { ChapitreView } from './Theorie.jsx';
 import { Chrono } from './Chrono.jsx';
 import { VOLET } from '../data/staps.js';
 import { FondamentauxSeance } from './Fondamentaux.jsx';
+import { ETAPES_P15, PUBLIC_P15, CONTENUS_P15, STRUCTURE_P15, SECURITE_P15 } from '../data/progEleves.js';
+
+const OPTIONS_PROG = { suaps: [['p24', '24 séances'], ['p12', '12 séances']], staps: [['p24', '24 séances'], ['p12', '12 séances']], eleves: [['p15', '15 séances']] };
 
 const isEval = (prog, n) => { const p = PROGRAMMES[prog]; return n === p.theo || p.prat.includes(n) || n === p.bilan && prog === 'p24'; };
 const cap = (x) => (x ? x.charAt(0).toUpperCase() + x.slice(1) : x);
@@ -34,18 +37,19 @@ export function Seances({ prof }) {
       <div className="row between" style={{ marginBottom: 10 }}>
         <div>
           <h1 style={{ marginBottom: 2 }}>Programmation</h1>
-          <div className="muted small">{st.groupeNom || 'Groupe'} · {PROGRAMMES[prog].label} · séances de 1 h 30</div>
+          <div className="muted small">{st.groupeNom || 'Groupe'} · {PROGRAMMES[prog].label} · séances de 1 h 30{prog === 'p15' ? ' · progression pour débutants, présentée comme à des élèves' : ''}</div>
         </div>
         <div className="row">
-          {prof && <Seg value={prog} onChange={(v) => upd((d) => { d.prog = v; })} options={[['p24', '24 séances'], ['p12', '12 séances']]} />}
+          {prof && prog !== 'p15' && <Seg value={prog} onChange={(v) => upd((d) => { d.prog = v; })} options={OPTIONS_PROG[st.parcours || 'suaps']} />}
           <button className="btn sm" onClick={() => setInfo(true)}><Icon n="info" />Cadre</button>
         </div>
       </div>
       <div className="card" style={{ marginBottom: 12 }}>
         <div className="row between">
+          {prog === 'p15' ? <span className="muted small">Progression unique pour un groupe débutant : 5 étapes, du sol au debout, puis évaluation en S14 et S15.</span> : (
           <div className="row"><span className="muted small">Voir le contenu du niveau</span>
             <Seg value={niv} onChange={(v) => { setNiv(v); upd((d) => { d.niveauVue = v; }); }} options={[['tous', 'Tous'], ['D', 'Débutant'], ['I', 'Inter.'], ['C', 'Confirmé'], ['A', 'Avancé']]} />
-          </div>
+          </div>)}
           {prof && <div className="small"><b>{nbFaites}</b> / {list.length} séances faites</div>}
         </div>
         {prof && <div className="progress" style={{ marginTop: 10 }}><div style={{ width: (100 * nbFaites / list.length) + '%' }} /></div>}
@@ -82,6 +86,7 @@ export function Seances({ prof }) {
 }
 
 export function Cadre({ prog }) {
+  if (prog === 'p15') return <CadreP15 />;
   return (
     <div className="stack">
       <p>{PROGRAMMES[prog].blocs}</p>
@@ -97,6 +102,25 @@ export function Cadre({ prog }) {
   );
 }
 
+function CadreP15() {
+  return (
+    <div className="stack">
+      <p>{PROGRAMMES.p15.blocs}</p>
+      <h3>Public et finalité</h3>
+      <ul>{PUBLIC_P15.map((p) => <li key={p}>{p}</li>)}</ul>
+      <h3>Contenus à acquérir sur le cycle</h3>
+      <ul>{CONTENUS_P15.map(([a, b]) => <li key={a}><b>{a} : </b>{b}</li>)}</ul>
+      <h3>Progression générale</h3>
+      <table className="t"><thead><tr><th>Séances</th><th>Étape</th><th>Contenus dominants</th></tr></thead>
+        <tbody>{ETAPES_P15.map(([a, b, c]) => <tr key={a}><td style={{ whiteSpace: 'nowrap' }}>{a}</td><td><b>{b}</b></td><td>{c}</td></tr>)}</tbody></table>
+      <h3>Organisation type d'une séance (1 h 30)</h3>
+      <table className="t"><tbody>{STRUCTURE_P15.map(([a, m, b], i) => <tr key={i}><td><b>{i + 1}. {a}</b><div className="small muted">{b}</div></td><td style={{ whiteSpace: 'nowrap' }}>{m} min</td></tr>)}</tbody></table>
+      <h3>Règles de sécurité permanentes</h3>
+      <ul>{SECURITE_P15.map((p) => <li key={p}>{p}</li>)}</ul>
+    </div>
+  );
+}
+
 function SeanceDetail({ s, prof, niv, onBack, onGo }) {
   const { st, upd } = useStore();
   const prog = st.prog;
@@ -105,7 +129,7 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
   const [appel, setAppel] = useState(false);
   const [chrono, setChrono] = useState(false);
   const [rev, setRev] = useState({});
-  const liens = (prog === 'p24' ? LIENS_STAPS_24 : LIENS_STAPS_12)[s.n] || [];
+  const liens = ({ p24: LIENS_STAPS_24, p12: LIENS_STAPS_12 }[prog] || {})[s.n] || [];
   const fait = !!st.faites[prog]?.[s.n];
   const total = SEANCES[prog].length;
   const techs = (s.tech || []).map(tech).filter(Boolean);
@@ -149,6 +173,12 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
             </div>
             {s.criteres && <><h3 style={{ marginTop: 10 }}>Critères de réussite</h3><p className="small">{cap(s.criteres)}</p></>}
           </div>
+          {s.didac && (
+            <div className="card">
+              <h3>Point didactique (pour enseigner à des débutants)</h3>
+              <p className="small">{s.didac}</p>
+            </div>
+          )}
           {Object.keys(s.niveaux).length > 0 && (
             <div className="card">
               <h3>Déclinaison par niveau</h3>
@@ -192,7 +222,7 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
               ) : th.quizTitre && <p className="small muted">{th.quizTitre}</p>}
             </div>
           )}
-          {st.parcours === 'staps' && VOLET[prog][s.n] && <VoletStaps n={s.n} prof={prof} />}
+          {st.parcours === 'staps' && VOLET[prog]?.[s.n] && <VoletStaps n={s.n} prof={prof} />}
           {liens.length > 0 && (
             <div className="card">
               <h3>Pour aller plus loin (L2 STAPS)</h3>
@@ -251,7 +281,7 @@ function VoletStaps({ n, prof }) {
   const [obj, tache] = VOLET[prog][n];
   const iv = st.interv?.[prog]?.[n] || {};
   const nom = (id) => { const e = st.eleves.find((x) => x.id === id); return e ? `${e.prenom} ${e.nom}` : '?'; };
-  const tog = (role, id) => upd((d) => { d.interv = d.interv || { p24: {}, p12: {} }; d.interv[prog] = d.interv[prog] || {}; const x = d.interv[prog][n] || {}; const l = x[role] || []; x[role] = l.includes(id) ? l.filter((y) => y !== id) : [...l, id]; d.interv[prog][n] = x; });
+  const tog = (role, id) => upd((d) => { d.interv = d.interv || { p24: {}, p12: {}, p15: {} }; d.interv[prog] = d.interv[prog] || {}; const x = d.interv[prog][n] || {}; const l = x[role] || []; x[role] = l.includes(id) ? l.filter((y) => y !== id) : [...l, id]; d.interv[prog][n] = x; });
   const nb = (id) => Object.values(st.interv?.[prog] || {}).reduce((a, x) => a + ((x.echauf || []).includes(id) ? 1 : 0) + ((x.situation || []).includes(id) ? 1 : 0), 0);
   return (
     <div className="card" style={{ borderColor: 'var(--ink)' }}>

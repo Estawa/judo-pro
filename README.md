@@ -3,7 +3,8 @@
 Application web (PWA, hors connexion) pour préparer, conduire et évaluer un cycle de judo en L2 STAPS :
 programmations de 24 et 12 séances en 4 niveaux, techniques avec schémas animés remplaçables par vos photos et vidéos,
 théorie STAPS, arbitrage FIJ 2026, quiz et écrit, groupe, appel, binômes, évaluation.
-Deux parcours (Réglages) : SUAPS / option notée, ou L2 STAPS (volet de formation, observation, intervention pédagogique notée).
+Trois parcours (Réglages), donc trois formes de l'appli : SUAPS / option notée ; L2 STAPS (volet de formation, observation, intervention pédagogique notée) ;
+Prog Élèves (progression de 15 séances pour débutants, présentée comme à des élèves, avec point didactique, pratique /12 et écrit /8).
 
 Notice complète : `docs/Notice_Judo_Pro.pdf`.
 
@@ -22,7 +23,8 @@ sur un appareil restent prioritaires sur cet appareil).
 
 ## Modifier le code
 Sources dans `src/` (React). Reconstruire : `cd tools && npm install && npm run build`.
-Contenus : `src/data/` (séances, techniques, théorie, quiz, arbitrage, barèmes).
+Contenus : `src/data/` (séances, techniques, théorie, quiz, arbitrage, barèmes ; Prog Élèves dans `src/data/progEleves.js`).
+Notice : `python3 tools/notice.py` régénère `docs/Notice_Judo_Pro.pdf` (captures dans `tools/notice-img/`).
 
 ## Accès des étudiants (config/acces.json)
 - `"etudiants": false` ferme l'espace étudiant (appliqué dès que le téléphone se connecte).

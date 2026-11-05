@@ -1,6 +1,7 @@
 // Cadre de la programmation et de l'évaluation (d'après les documents de C. Guilhem)
 export const PROGRAMMES = {
   p24: { label: '24 séances (année)', court: '24 séances', bilan: 12, theo: 22, prat: [23, 24], blocs: '5 blocs de 4 à 5 séances ; bilan formatif en S12, évaluation finale de S22 à S24.', dureeEcrit: 30, reajust: 12 },
+  p15: { label: '15 séances (progression débutants)', court: '15 séances', bilan: 6, theo: 15, prat: [14], blocs: '5 étapes : entrer dans l\'activité (S1-S3), maîtriser le sol (S4-S6), apprendre à projeter (S7-S10), relier et s\'opposer (S11-S13), évaluer (S14 pratique, S15 théorie).', dureeEcrit: 40, reajust: 6 },
   p12: { label: '12 séances (semestre)', court: '12 séances', bilan: 4, theo: 10, prat: [11, 12], blocs: '4 blocs de 2 à 4 séances ; réajustement des niveaux en S4 ; évaluation théorique en S10, évaluation pratique en S11 et S12.', dureeEcrit: 25, reajust: 4 },
 };
 

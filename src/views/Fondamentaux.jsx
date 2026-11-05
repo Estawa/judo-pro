@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { IMMOS, CIRCUIT_SOL, RETOURNEMENTS, PRINCIPES_RETOURNEMENT, FAMILLES_DEBOUT, FAMILLES_SOL, OPPOSITION, PLACE, PLACE_LABELS } from '../data/fondamentaux.js';
 import { tech, FAMILLES } from '../data/techniques.js';
 import { useStore } from '../store.js';
+import { PROGRAMMES } from '../data/programme.js';
 import { Icon, Lvl, Seg, Modal } from '../ui.jsx';
 import { Schema } from '../Diagrams.jsx';
 import { Illus } from '../Illus.jsx';
@@ -116,11 +117,11 @@ export function Fondamentaux({ prof }) {
 function OuDansLeCycle() {
   const { st } = useStore();
   const prog = st.prog;
-  const pl = PLACE[prog];
+  const pl = PLACE[prog] || {};
   const faites = st.faites[prog] || {};
   return (
     <div className="card">
-      <h2>Où chaque fondamental est travaillé ({prog === 'p24' ? '24' : '12'} séances)</h2>
+      <h2>Où chaque fondamental est travaillé ({PROGRAMMES[prog].court})</h2>
       <p className="small muted">Numéros des séances concernées ; les séances déjà faites sont en noir plein.</p>
       <div className="tablewrap"><table className="t"><thead><tr><th>Fondamental</th><th>Séances</th><th>Vu</th></tr></thead>
         <tbody>{PLACE_LABELS.map(([k, l]) => { const ns = pl[k] || []; const vu = ns.some((n) => faites[n]); return (
@@ -132,7 +133,7 @@ function OuDansLeCycle() {
 
 // Encart pour la fiche d'une séance : fondamentaux abordés ce jour-là
 export function FondamentauxSeance({ prog, n, onOpen }) {
-  const l = PLACE_LABELS.filter(([k]) => (PLACE[prog][k] || []).includes(n));
+  const l = PLACE_LABELS.filter(([k]) => (PLACE[prog]?.[k] || []).includes(n));
   if (!l.length) return null;
   return (
     <div className="card">

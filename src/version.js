@@ -1,5 +1,12 @@
-export const VERSION = '1.3.0';
+export const VERSION = '1.4.0';
 export const CHANGELOG = [
+  { v: '1.4.0', d: '5 novembre 2026', l: [
+    'Troisième parcours dans Réglages : « Prog Élèves ». L\'appli prend trois formes selon le choix : SUAPS / option notée, L2 STAPS, Prog Élèves.',
+    'Prog Élèves : progression de 15 séances de 1 h 30 pour un groupe débutant, présentée aux étudiants comme on la ferait avec des élèves (sol S1 à S6, debout S7 à S10, liaison et arbitrage S11 à S13, évaluations S14 et S15).',
+    'Chaque séance : objectif, déroulé minuté, critères de réussite, point didactique, techniques liées et théorie en 5 minutes.',
+    'Pages adaptées en Prog Élèves : cadre de la progression (étapes, contenus, séance type, sécurité), fondamentaux par séance, bilan de l\'étape sol et démonstration attendue dans Groupe, grille pratique /12 (démonstration, combat arbitré, arbitrage), écrit /8 avec une question de didactique.',
+    'Trois questions de didactique ajoutées à la banque (construire une séance pour débutants, justifier la progression).',
+  ] },
   { v: '1.3.0', d: '4 novembre 2026', l: [
     'Fin d\'accès des étudiants : après la date de fin (ou dès que le professeur ferme l\'accès), l\'espace étudiant affiche « Accès terminé » et ne fonctionne plus, même sur un téléphone où l\'appli est installée et hors connexion.',
     'Code professeur commun à tous les appareils (le code 1234 ne fonctionne plus) ; code personnel possible en plus sur un appareil.',

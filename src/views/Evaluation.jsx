@@ -3,6 +3,7 @@ import { useStore, noteTheo, notePrat, grille } from '../store.js';
 import { GRILLE_PRATIQUE, DEMO, DUREE_RANDORI, PROGRAMMES } from '../data/programme.js';
 import { COURTES } from '../data/quiz.js';
 import { NIVEAUX, tech } from '../data/techniques.js';
+import { DEMO_P15 } from '../data/progEleves.js';
 import { Icon, Lvl, Seg, download } from '../ui.jsx';
 
 export const maxP = (st) => grille(st).reduce((a, g) => a + g.total, 0);
@@ -16,7 +17,7 @@ export function Evaluation() {
   return (
     <div>
       <h1 style={{ marginBottom: 2 }}>Évaluation</h1>
-      <div className="muted small" style={{ marginBottom: 10 }}>{st.parcours === 'staps' ? `Parcours L2 STAPS : pratique et intervention pédagogique /${maxP(st)} (S${p.prat.join(' et S')}) + écrit /${maxT(st)} (S${p.theo}).` : `Pratique /${maxP(st)} (S${p.prat.join(' et S')}) + théorie /${maxT(st)} (S${p.theo}).`} Chaque étudiant est noté sur le programme de son niveau : un débutant peut obtenir la note maximale.</div>
+      <div className="muted small" style={{ marginBottom: 10 }}>{st.parcours === 'eleves' ? `Parcours Prog Élèves : pratique /${maxP(st)} en S${p.prat.join(' et S')} (démonstration, combat arbitré, arbitrage) + écrit /${maxT(st)} en S${p.theo} (QCM + question de didactique).` : st.parcours === 'staps' ? `Parcours L2 STAPS : pratique et intervention pédagogique /${maxP(st)} (S${p.prat.join(' et S')}) + écrit /${maxT(st)} (S${p.theo}).` : `Pratique /${maxP(st)} (S${p.prat.join(' et S')}) + théorie /${maxT(st)} (S${p.theo}).`} Chaque étudiant est noté sur le programme de son niveau : un débutant peut obtenir la note maximale.</div>
       <div className="row no-print" style={{ marginBottom: 12 }}><Seg value={vue} onChange={setVue} options={[['prat', (st.parcours === 'staps' ? 'Pratique et intervention /' : 'Pratique /') + maxP(st)], ['theo', 'Théorie /' + maxT(st)], ['recap', 'Récapitulatif']]} /></div>
       {!st.eleves.length ? <div className="card empty">Ajoutez d'abord vos étudiants dans l'onglet « Groupe ».</div> : (
         <>
@@ -46,8 +47,8 @@ function Pratique() {
           </select>
           <button className="iconbtn" onClick={() => setIdx(Math.min(st.eleves.length - 1, idx + 1))} disabled={idx >= st.eleves.length - 1} aria-label="Suivant"><Icon n="right" /></button>
         </div>
-        <div className="row" style={{ marginTop: 10 }}><Lvl n={e.niveau} /><b>{NIVEAUX[e.niveau].label}</b><span className="small muted">· randori de {DUREE_RANDORI[e.niveau]}</span></div>
-        <p className="small" style={{ marginTop: 6 }}><b>Démonstration attendue : </b>{DEMO[e.niveau]}</p>
+        <div className="row" style={{ marginTop: 10 }}><Lvl n={e.niveau} /><b>{NIVEAUX[e.niveau].label}</b><span className="small muted">· {st.parcours === 'eleves' ? '2 combats de 2 min' : `randori de ${DUREE_RANDORI[e.niveau]}`}</span></div>
+        <p className="small" style={{ marginTop: 6 }}><b>Démonstration attendue : </b>{st.parcours === 'eleves' ? DEMO_P15 : DEMO[e.niveau]}</p>
         {(e.demo || []).length > 0 && <div className="row">{e.demo.map((t) => <span key={t} className="chip">{tech(t)?.nom}</span>)}{e.tokui && <span className="chip red">Tokui : {tech(e.tokui)?.nom}</span>}</div>}
       </div>
       {grille(st).map((ep) => (

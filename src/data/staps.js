@@ -4,6 +4,7 @@
 export const PARCOURS = {
   suaps: { label: 'SUAPS / option notée', court: 'SUAPS', bareme: { qcm: 8, ptQcm: 0.5, courtes: 2, ptCourte: 1 }, contenu: 'base' },
   staps: { label: 'L2 STAPS', court: 'STAPS', bareme: { qcm: 6, ptQcm: 0.5, courtes: 3, ptCourte: 1 }, contenu: 'tout' },
+  eleves: { label: 'Prog Élèves', court: 'Prog Élèves', bareme: { qcm: 16, ptQcm: 0.25, courtes: 1, ptCourte: 4 }, contenu: 'base' },
 };
 
 // Grille STAPS (/14) : la pratique pèse moins, l'intervention pédagogique entre dans la note
@@ -32,6 +33,7 @@ export const GRILLE_STAPS = [
 
 // Volet STAPS de chaque séance : objectif de formation + tâche confiée aux étudiants
 export const VOLET = {
+  p15: {},
   p12: {
     1: ['Identifier les risques d\'une activité de combat et les règles qui les maîtrisent.', 'Observer le test de positionnement d\'un camarade et relever les critères de sécurité des chutes (tête, frappe à 45°).'],
     2: ['Analyser l\'équilibre : centre de gravité, polygone de sustentation, 8 directions de kuzushi.', 'Par binôme, noter la direction de déséquilibre obtenue sur chaque tentative.'],
