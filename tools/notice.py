@@ -1,5 +1,7 @@
 # Génère docs/Notice_Judo_Pro.pdf (noir et blanc, paragraphes et lignes de tableau jamais coupés).
-# Usage : python3 tools/notice.py   (captures d'écran dans tools/notice-img/, en niveaux de gris)
+# Usage : python3 tools/notice.py               → docs/Notice_Judo_Pro.pdf (version à partager, sans les réglages réservés)
+#         python3 tools/notice.py --complet <pdf> → version complète pour l'administrateur (jamais publiée dans le dépôt)
+# Captures d'écran dans tools/notice-img/, en niveaux de gris.
 import os, re, sys
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
@@ -14,7 +16,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IMG = os.path.join(ROOT, 'tools', 'notice-img')
 sys.path.insert(0, ROOT)
 VERSION = re.search(r"VERSION = '([^']+)'", open(os.path.join(ROOT, 'src/version.js'), encoding='utf8').read()).group(1)
-DATE = '5 novembre 2026'
+DATE = '6 novembre 2026'
+COMPLET = '--complet' in sys.argv
+SORTIE = sys.argv[sys.argv.index('--complet') + 1] if COMPLET and len(sys.argv) > sys.argv.index('--complet') + 1 else None
 
 F = '/usr/share/fonts/truetype/dejavu/'
 pdfmetrics.registerFont(TTFont('DV', F + 'DejaVuSans.ttf'))
@@ -121,7 +125,8 @@ B('Onglets Programme, Fondamentaux, Techniques, Théorie, Arbitrage, Quiz et, en
 H2('Fermer l\'accès à la fin du cycle')
 B('Réglages › Accès des étudiants indique si l\'accès est ouvert et jusqu\'à quelle date.',
   'À la date de fin, l\'espace étudiant cesse de fonctionner tout seul, même hors connexion.',
-  'Pour fermer plus tôt ou changer la date : le demander, ou modifier sur GitHub le fichier config/acces.json (« etudiants » à false, ou nouvelle date « fin »).')
+  'Pour fermer plus tôt ou changer la date : le demander à la personne qui gère l\'appli.' if not COMPLET else
+  'Pour fermer plus tôt ou changer la date : voir le chapitre « Réservé à l\'administrateur » en fin de notice.')
 
 H1('4. Onglet Fondamentaux')
 B('Visible par le professeur et par les étudiants : ce que chaque étudiant doit avoir vu pendant le cycle.',
@@ -142,6 +147,16 @@ B('Recherche (nom japonais ou traduction), filtres Tout / Chutes / Debout / Sol,
   'Vidéos : animation 3D et fiche FIJ, recherche YouTube ; <b>Ajouter une vidéo YouTube</b> (professeur).',
   '<b>Remplacer un dessin</b> (professeur) : « Photo / vidéo » ouvre l\'appareil photo, « Album » la galerie ou les fichiers ; « Dessin » remet le schéma d\'origine. Même principe pour la direction du déséquilibre et les gestes de l\'arbitre.',
   '<b>Mes photos, vidéos et GIF</b> (professeur) : stockés sur l\'appareil, hors ligne.')
+story.append(CondPageBreak(130 * mm))
+H2('Modifier une fiche, ou en créer une (professeur)')
+IMGS(('fiche-boutons.png', 'Boutons d\'une fiche'), ('fiche-modifier.png', 'Modifier la fiche'), ('fiche-seances.png', 'Séances où elle apparaît'))
+B('<b>Modifier la fiche</b> : titre, sous-titre (traduction), famille (où ranger la fiche), niveau, description ; croquis : schéma animé (au choix parmi ceux de l\'appli, ou aucun) et direction du déséquilibre ; les trois phases ; étapes, points clés, erreurs fréquentes, éducatifs (une ligne par élément) ; sécurité, enchaînements, contres, sorties. Un champ vide n\'apparaît pas sur la fiche.',
+  '<b>Séances où elle apparaît</b> : pour chaque programmation (24 séances, 12 séances, Prog Élèves), cocher les séances ; la fiche s\'affiche alors dans « Techniques de la séance ». Pour une fiche de l\'appli, les séances de la programmation d\'origine sont déjà cochées : décocher pour la retirer, cocher pour l\'ajouter ailleurs.',
+  '<b>Masquer cette fiche</b> : elle disparaît des listes et des séances ; elle reste dans « Fiches masquées », en bas de l\'onglet, pour la remettre.',
+  '<b>Nouvelle fiche</b> (en haut de l\'onglet) : une fiche vierge, à remplir et à placer comme les autres (famille, niveau, séances). <b>Nouvelle fiche à partir de celle-ci</b> : une copie à modifier, la fiche d\'origine restant intacte.',
+  'Photos, vidéos et croquis dessinés à la main (photographiés) : après l\'enregistrement, « Photo / vidéo » ou « Album » sous le schéma, et « Mes photos, vidéos et GIF » en bas de la fiche ; liens YouTube comme pour les autres fiches.',
+  '<b>Revenir à la fiche d\'origine</b> (fiche modifiée) ou <b>Supprimer la fiche</b> (fiche créée). La case <b>Mes fiches</b> n\'affiche que les fiches créées ou modifiées.',
+  'Les fiches modifiées restent sur l\'appareil. Pour qu\'elles apparaissent chez les étudiants et sur vos autres appareils : Réglages › « Exporter mes illustrations et mes fiches (zip) », puis envoyer le fichier pour qu\'il soit publié avec l\'appli.')
 
 H1('7. Onglet Théorie')
 B('Chapitres : fiche théorie ou approfondissement STAPS (histoire, principes et code moral, analyse technique, biomécanique, physiologie, didactique, grades et kata, sécurité).',
@@ -185,7 +200,7 @@ B('<b>Parcours</b> : SUAPS / option notée, L2 STAPS ou Prog Élèves. En change
   '<b>Calendrier</b> : date de la première séance et semaines sans cours, puis Calculer les dates (une séance par semaine).',
   '<b>Barème de l\'écrit</b> : nombre de QCM, points par QCM, nombre de questions courtes, points par question.',
   'Code personnel ; thème jour / nuit ; Partager avec les étudiants ; Accès des étudiants.',
-  '<b>Mes illustrations</b> : Exporter mes illustrations (zip) pour publier vos photos et vidéos.',
+  '<b>Mes illustrations et mes fiches</b> : « Exporter mes illustrations et mes fiches (zip) » pour publier vos photos, vidéos et fiches modifiées.',
   '<b>Sauvegarder / Restaurer</b> ; journal des versions, notice PDF, Tout effacer.')
 
 H1('14. Procédure conseillée')
@@ -212,6 +227,7 @@ P('Toutes les données restent sur l\'appareil utilisé (aucun compte, aucun env
 
 H1('16. Chronologie des versions')
 T([['Version', 'Date', 'Contenu'],
+   ['1.5.0', '6 novembre 2026', 'Fiches techniques modifiables : titre, textes, famille, niveau, schéma animé, séances où la fiche apparaît, fiche masquable ; nouvelle fiche vierge ou à partir d\'une fiche existante ; revenir à l\'origine, supprimer, filtre « Mes fiches » ; export des fiches avec les illustrations.'],
    ['1.4.1', '5 novembre 2026', 'Séances : toutes les techniques prévues dans une séance s\'affichent, quel que soit le niveau choisi (tai-otoshi en séance 9 de Prog Élèves et la chute avant roulée étaient masqués).'],
    ['1.4.0', '5 novembre 2026', 'Troisième parcours « Prog Élèves » : l\'appli prend trois formes (SUAPS, L2 STAPS, Prog Élèves). Progression de 15 séances pour débutants avec déroulé minuté et point didactique ; cadre, fondamentaux, groupe, évaluation pratique /12 et écrit /8 adaptés ; questions de didactique.'],
    ['1.3.0', '4 novembre 2026', 'Fin d\'accès des étudiants à une date choisie ou sur demande, même hors connexion ; code professeur commun ; partage du lien depuis Réglages.'],
@@ -221,15 +237,33 @@ T([['Version', 'Date', 'Contenu'],
    ['1.0.0', '3 novembre 2026', 'Première version : programmations 24 et 12 séances en 4 niveaux, techniques animées, théorie, arbitrage, quiz, groupe, évaluation, dessins remplaçables, chrono, hors connexion.']],
   [18 * mm, 30 * mm, 126 * mm])
 
+# ---------------------------------------------------------------- réservé à l'administrateur (version complète seulement)
+if COMPLET:
+    H1('17. Réservé à l\'administrateur')
+    P('Ce chapitre n\'existe que dans la version complète de la notice. Il ne figure ni dans l\'appli, ni dans le dépôt, ni dans la notice à partager.')
+    H2('Ouvrir, fermer et dater l\'accès des étudiants')
+    B('Fichier <b>config/acces.json</b> du dépôt GitHub Estawa/judo-pro : le modifier sur GitHub (crayon, puis « Commit changes ») ; Vercel redéploie en une minute et les téléphones l\'appliquent à la connexion suivante.',
+      '<b>"etudiants": false</b> ferme tout de suite l\'espace étudiant ; <b>true</b> le rouvre.',
+      '<b>"fin": "AAAA-MM-JJ"</b> : après cette date, l\'espace étudiant ne fonctionne plus, même hors connexion.',
+      '<b>"message"</b> : texte affiché sur l\'écran « Accès terminé ».')
+    H2('Code professeur commun')
+    B('<b>"codeProf"</b> dans config/acces.json : empreinte SHA-256 du texte « judopro:&lt;code&gt; ». Le code lui-même n\'est jamais publié.',
+      'Pour changer de code : calculer l\'empreinte de « judopro:NOUVEAU-CODE » et la mettre à la place (ou le demander à Claude, qui publie le changement).',
+      'Un code personnel peut s\'ajouter sur un appareil (Réglages) ; il ne remplace pas le code commun sur les autres appareils.')
+    H2('Publier les illustrations et les fiches pour tous les appareils')
+    B('Réglages › « Exporter mes illustrations et mes fiches (zip) » produit un dossier <b>media/</b> : photos et vidéos, <b>manifest.json</b> (illustrations) et <b>fiches.json</b> (fiches modifiées et créées).',
+      'Copier ce dossier à la racine du dépôt (ou l\'envoyer à Claude) : après redéploiement, illustrations et fiches apparaissent chez tous les étudiants et sur vos autres appareils. Celles faites sur un appareil restent prioritaires sur cet appareil.',
+      'Les illustrations déjà publiées restent dans le manifeste exporté, même depuis un appareil qui ne les a pas.')
+
 # ---------------------------------------------------------------- mise en page
 def deco(c, d):
     c.saveState(); c.setFont('DV', 8); c.setFillColor(K)
-    c.drawString(18 * mm, A4[1] - 11 * mm, f'Judo Pro by C. Guilhem — notice v{VERSION}')
+    c.drawString(18 * mm, A4[1] - 11 * mm, f'Judo Pro by C. Guilhem — notice v{VERSION}' + (' — version complète' if COMPLET else ''))
     c.drawRightString(A4[0] - 18 * mm, A4[1] - 11 * mm, f'page {d.page}')
     c.setLineWidth(0.4); c.line(18 * mm, A4[1] - 13 * mm, A4[0] - 18 * mm, A4[1] - 13 * mm)
     c.restoreState()
 
-out = os.path.join(ROOT, 'docs', 'Notice_Judo_Pro.pdf')
+out = SORTIE or os.path.join(ROOT, 'docs', 'Notice_Judo_Pro.pdf')
 doc = BaseDocTemplate(out, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm, topMargin=18 * mm, bottomMargin=15 * mm,
                       title='Notice Judo Pro', author='C. Guilhem')
 doc.addPageTemplates([PageTemplate(frames=[Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id='f')], onPage=deco)])
