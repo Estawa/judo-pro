@@ -519,6 +519,33 @@ export const ficheOrigine = (id) => TECHNIQUES_BASE.find((t) => t.id === id) || 
 export const fichesMasquees = () => Object.values(TOUTES).filter((t) => t.masquee);
 export const estPubliee = (id) => PUBLIEES.has(id);
 
+// ─────────── Variantes (bis, ter, quater…) ───────────
+// Une variante garde dans « variante_de » la fiche de tête de sa famille ; la tête peut porter un nom de famille (« groupe »).
+export const SUFFIXES = ['bis', 'ter', 'quater', 'quinquies', 'sexies', 'septies', 'octies', 'nonies', 'decies'];
+const RE_SUFFIXE = new RegExp('\\s+(' + SUFFIXES.join('|') + ')$', 'i');
+export const teteDe = (id) => { const t = TOUTES[id]; return t && t.variante_de && TOUTES[t.variante_de] ? t.variante_de : id; };
+export function variantes(id) {
+  const tete = teteDe(id);
+  const membres = Object.values(TOUTES).filter((t) => t.id === tete || t.variante_de === tete);
+  return membres.length > 1 ? membres : [];
+}
+export function familleVariantes(id) {
+  const tete = TOUTES[teteDe(id)];
+  return tete ? (tete.groupe || `${tete.nom.replace(RE_SUFFIXE, '')} et ses variantes`) : '';
+}
+export function famillesVariantes() {
+  const tetes = new Set(Object.values(TOUTES).filter((t) => t.variante_de && TOUTES[t.variante_de]).map((t) => t.variante_de));
+  return [...tetes].map((id) => ({ tete: id, nom: familleVariantes(id), membres: variantes(id) })).sort((a, b) => a.nom.localeCompare(b.nom));
+}
+// Nom proposé pour une nouvelle variante : « Seoi-nage bis », puis « ter », « quater »…
+export function nomVariante(id) {
+  const tete = TOUTES[teteDe(id)];
+  const racine = (tete ? tete.nom : TOUTES[id].nom).replace(RE_SUFFIXE, '');
+  const pris = new Set(variantes(id).map((t) => t.nom.toLowerCase()));
+  for (const s of SUFFIXES) if (!pris.has(`${racine} ${s}`.toLowerCase())) return `${racine} ${s}`;
+  return `${racine} (variante)`;
+}
+
 // Techniques d'une séance : celles prévues, sauf si la fiche a été déplacée, plus celles que vous y avez placées.
 export function techsSeance(prog, n, prevues) {
   const ids = (prevues || []).filter((id) => {

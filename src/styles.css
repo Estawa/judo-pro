@@ -189,3 +189,5 @@ summary { cursor: pointer; font-weight: 500; }
 .fiche-editeur .card > div + div { margin-top: 8px; }
 .choix-seances { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px 12px; margin: 8px 0 4px; }
 .choix-seances label { display: flex; gap: 6px; align-items: baseline; }
+button.lien { background: none; border: 0; padding: 0 0 0 6px; color: var(--ink2); text-decoration: underline; cursor: pointer; font-size: inherit; }
+.variantes { padding: 10px 12px; }

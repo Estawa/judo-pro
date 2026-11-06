@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { FAMILLES, NIVEAUX, KUZUSHI, CHAMPS_FICHE, TECHNIQUES_BASE, tech, ficheOrigine } from '../data/techniques.js';
+import { FAMILLES, NIVEAUX, KUZUSHI, CHAMPS_FICHE, TECHNIQUES_BASE, tech, ficheOrigine, techsSeance, nomVariante } from '../data/techniques.js';
+import { listMedia, addMedia, getIllus, setIllus, illusPubliees } from '../media.js';
 import { SEANCES } from '../data/seances.js';
 import { useStore, uid } from '../store.js';
 import { Icon, toast } from '../ui.jsx';
@@ -14,6 +15,13 @@ const CROQUIS = (() => {
 })();
 const PROGS = [['p24', '24 séances (SUAPS / L2 STAPS)'], ['p12', '12 séances (SUAPS / L2 STAPS)'], ['p15', 'Prog Élèves (15 séances)']];
 const LISTES = ['etapes', 'points', 'erreurs', 'educ'];
+
+// Séances où une fiche apparaît actuellement (programmation d'origine, ou celles que vous avez choisies)
+export function seancesActuelles(id) {
+  const r = {};
+  for (const [p] of PROGS) r[p] = (SEANCES[p] || []).filter((s) => techsSeance(p, s.n, s.tech).some((t) => t.id === id)).map((s) => s.n);
+  return r;
+}
 
 // Séances où une fiche apparaît d'origine (d'après les programmations)
 export function seancesParDefaut(id) {
@@ -77,7 +85,11 @@ export function FicheEditeur({ id, mode, onClose, onSaved }) {
         if (JSON.stringify(a) === JSON.stringify(fiche[k])) delete fiche[k];
       }
     }
-    upd((d) => { d.fiches = { ...(d.fiches || {}), [cible]: fiche }; });
+    upd((d) => {
+      const ancien = (d.fiches || {})[cible] || {};
+      const autres = Object.fromEntries(Object.entries(ancien).filter(([k]) => !CHAMPS_FICHE.includes(k) && !['seances', 'masquee', 'cree'].includes(k)));
+      d.fiches = { ...(d.fiches || {}), [cible]: { ...autres, ...fiche } };
+    });
     toast(nouvelle ? 'Fiche créée' : 'Fiche enregistrée');
     onSaved && onSaved(cible);
   };
@@ -160,6 +172,62 @@ export function FicheEditeur({ id, mode, onClose, onSaved }) {
       )}
       <div className="row">
         <button className="btn primary" onClick={enregistrer}><Icon n="check" />{nouvelle ? 'Créer la fiche' : 'Enregistrer'}</button>
+        <button className="btn ghost" onClick={onClose}>Annuler</button>
+      </div>
+    </div>
+  );
+}
+
+// Dupliquer une fiche intégralement (textes, schéma, photos, vidéos, liens YouTube), puis la retoucher.
+// La copie peut devenir une variante liée (bis, ter, quater…) : raccourcis entre les fiches et famille commune.
+export function Dupliquer({ id, onClose, onCree }) {
+  const { st, upd } = useStore();
+  const t = tech(id);
+  const [nom, setNom] = useState(() => nomVariante(id));
+  const [lier, setLier] = useState(true);
+  const [medias, setMedias] = useState(true);
+  const [memes, setMemes] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const go = async () => {
+    if (!nom.trim()) { toast('Donnez un titre à la copie'); return; }
+    setBusy(true);
+    const cible = 'perso-' + uid();
+    const fiche = {};
+    for (const k of [...CHAMPS_FICHE, 'gokyo', 'ijf', 'contre']) if (t[k] !== undefined && t[k] !== '') fiche[k] = structuredClone(t[k]);
+    fiche.nom = nom.trim();
+    fiche.cree = true;
+    if (lier) fiche.variante_de = t.variante_de && tech(t.variante_de) ? t.variante_de : id;
+    if (memes) fiche.seances = seancesActuelles(id);
+    upd((d) => {
+      d.fiches = { ...(d.fiches || {}), [cible]: fiche };
+      if (medias && (d.videos[id] || []).length) d.videos[cible] = [...d.videos[id]];
+    });
+    if (medias) {
+      try {
+        for (const m of await listMedia(id)) await addMedia(cible, new File([m.blob], m.name || 'media', { type: m.type }));
+        const pub = await illusPubliees();
+        for (const [de, vers] of [['tech:' + id, 'tech:' + cible], ['rose:' + id, 'rose:' + cible]]) {
+          const x = await getIllus(de);
+          if (x) { await setIllus(vers, new File([x.blob], x.name || vers, { type: x.type })); continue; }
+          if (pub[de]) {
+            try { const r = await fetch(pub[de].src); if (r.ok) { const b = await r.blob(); await setIllus(vers, new File([b], vers, { type: pub[de].type || b.type })); } } catch (e) { /* hors ligne : le schéma reste */ }
+          }
+        }
+      } catch (e) { toast('Fiche copiée, mais certains médias n\'ont pas pu l\'être (mémoire pleine ?)'); }
+    }
+    setBusy(false);
+    toast(lier ? 'Variante créée : retouchez ce qui change' : 'Copie créée : retouchez ce qui change');
+    onCree(cible);
+  };
+  return (
+    <div className="stack">
+      <p className="small">Toute la fiche « {t.nom} » est recopiée : textes, schéma, direction du déséquilibre, famille, niveau. Vous n'aurez plus qu'à changer ce qui diffère.</p>
+      <div><label className="f">Titre de la copie</label><input type="text" value={nom} onChange={(e) => setNom(e.target.value)} style={{ width: '100%' }} /></div>
+      <label className="small"><input type="checkbox" checked={lier} onChange={(e) => setLier(e.target.checked)} /> En faire une <b>variante liée</b> : raccourcis entre « {t.nom} » et ses variantes, et une famille commune dans les filtres</label>
+      <label className="small"><input type="checkbox" checked={medias} onChange={(e) => setMedias(e.target.checked)} /> Copier aussi les photos, vidéos, illustrations et liens YouTube</label>
+      <label className="small"><input type="checkbox" checked={memes} onChange={(e) => setMemes(e.target.checked)} /> La placer dans les mêmes séances que l'original</label>
+      <div className="row">
+        <button className="btn primary" disabled={busy} onClick={go}><Icon n="layers" />{busy ? 'Copie…' : 'Dupliquer et retoucher'}</button>
         <button className="btn ghost" onClick={onClose}>Annuler</button>
       </div>
     </div>

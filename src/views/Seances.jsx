@@ -237,7 +237,7 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
           )}
         </div>
       </div>
-      {techOpen && <Modal title="Technique" onClose={() => setTechOpen(null)}><TechDetail id={techOpen} prof={prof} /></Modal>}
+      {techOpen && <Modal title={tech(techOpen)?.nom || "Technique"} onClose={() => setTechOpen(null)}><TechDetail id={techOpen} prof={prof} onOpen={setTechOpen} /></Modal>}
       {chap && <Modal title="Théorie" onClose={() => setChap(null)}><ChapitreView id={chap} /></Modal>}
       {appel && <Modal title={`Appel — séance ${s.n}`} onClose={() => setAppel(false)}><Appel n={s.n} /></Modal>}
       {chrono && <Modal title="Chrono randori" onClose={() => setChrono(false)}><Chrono /></Modal>}

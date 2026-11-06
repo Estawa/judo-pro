@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { TECHNIQUES, FAMILLES, NIVEAUX, KUZUSHI, DECODEUR, tech, ijfUrl, ijfAnim, ytUrl, fichesMasquees, estPubliee } from '../data/techniques.js';
-import { FicheEditeur } from './FicheEditeur.jsx';
+import { TECHNIQUES, FAMILLES, NIVEAUX, KUZUSHI, DECODEUR, tech, ijfUrl, ijfAnim, ytUrl, fichesMasquees, estPubliee, variantes, familleVariantes, famillesVariantes, teteDe } from '../data/techniques.js';
+import { FicheEditeur, Dupliquer } from './FicheEditeur.jsx';
 import { useStore } from '../store.js';
 import { Icon, Lvl, Seg, Modal, Search, toast } from '../ui.jsx';
 import { Schema, KuzushiRose } from '../Diagrams.jsx';
@@ -24,8 +24,8 @@ export function Techniques({ prof }) {
 
   const list = useMemo(() => TECHNIQUES.filter((t) => {
     const c = FAMILLES[t.fam].cat;
-    if (cat !== 'tout' && c !== cat) return false;
-    if (fam && t.fam !== fam) return false;
+    if (cat !== 'tout' && c !== cat && !(fam || '').startsWith('var:')) return false;
+    if (fam && fam.startsWith('var:')) { if (teteDe(t.id) !== fam.slice(4)) return false; } else if (fam && t.fam !== fam) return false;
     if (niv && t.niv !== niv) return false;
     if (q && !norm(t.nom + (t.trad || '')).includes(norm(q))) return false;
     if (mes && !t.perso && !t.modifiee) return false;
@@ -54,6 +54,7 @@ export function Techniques({ prof }) {
           <select value={fam} onChange={(e) => setFam(e.target.value)} style={{ maxWidth: 300 }} aria-label="Famille">
             <option value="">Toutes les familles</option>
             {famOpts.map(([k, f]) => <option key={k} value={k}>{f.label}</option>)}
+            {famillesVariantes().length > 0 && <optgroup label="Familles de variantes">{famillesVariantes().map((g) => <option key={g.tete} value={'var:' + g.tete}>{g.nom} ({g.membres.length})</option>)}</optgroup>}
           </select>
           <select value={niv} onChange={(e) => setNiv(e.target.value)} style={{ maxWidth: 220 }} aria-label="Niveau">
             <option value="">Tous les niveaux</option>
@@ -79,6 +80,7 @@ export function Techniques({ prof }) {
               {t.contre && <span className="chip red">Contre</span>}
               {counts[t.id] ? <span className="chip green"><Icon n="video" style={{ width: 12 }} />{counts[t.id]}</span> : null}
               {(st.videos[t.id] || []).length ? <span className="chip green">YouTube {(st.videos[t.id] || []).length}</span> : null}
+              {variantes(t.id).length > 0 && <span className="chip" title={familleVariantes(t.id)}><Icon n="layers" style={{ width: 12 }} />{variantes(t.id).length} variantes</span>}
               {prof && t.perso && <span className="chip">Ma fiche</span>}
               {prof && t.modifiee && <span className="chip">Modifiée</span>}
             </div>
@@ -93,8 +95,11 @@ export function Techniques({ prof }) {
         </details>
       )}
       <p className="tiny muted" style={{ marginTop: 14 }}>Niveaux : <Lvl n="D" /> débutant · <Lvl n="I" /> intermédiaire · <Lvl n="C" /> confirmé · <Lvl n="A" /> avancé · <Lvl n="X" /> culture (hors programme). Les schémas sont donnés pour un tori droitier.</p>
-      {open && tech(open) && <Modal title={tech(open).nom} onClose={() => setOpen(null)}><TechDetail id={open} prof={prof} onEdit={(mode) => setEdit({ id: open, mode })} onDeleted={() => setOpen(null)} /></Modal>}
-      {edit && <Modal title={edit.mode === 'vierge' ? 'Nouvelle fiche' : edit.mode === 'copie' ? 'Nouvelle fiche à partir de « ' + tech(edit.id).nom + ' »' : 'Modifier la fiche'} onClose={() => setEdit(null)}>
+      {open && tech(open) && <Modal title={tech(open).nom} onClose={() => setOpen(null)}><TechDetail id={open} prof={prof} onEdit={(mode) => setEdit({ id: open, mode })} onDeleted={() => setOpen(null)} onOpen={setOpen} /></Modal>}
+      {edit && edit.mode === 'dupliquer' && <Modal title={'Dupliquer « ' + tech(edit.id).nom + ' »'} onClose={() => setEdit(null)}>
+        <Dupliquer id={edit.id} onClose={() => setEdit(null)} onCree={(cible) => { setOpen(cible); setEdit({ id: cible, mode: 'modifier' }); }} />
+      </Modal>}
+      {edit && edit.mode !== 'dupliquer' && <Modal title={edit.mode === 'vierge' ? 'Nouvelle fiche' : edit.mode === 'copie' ? 'Nouvelle fiche à partir de « ' + tech(edit.id).nom + ' »' : 'Modifier la fiche'} onClose={() => setEdit(null)}>
         <FicheEditeur id={edit.id} mode={edit.mode} onClose={() => setEdit(null)} onSaved={(cible) => { setEdit(null); setOpen(cible); }} />
       </Modal>}
       {dec && <Modal title="Décoder le nom d'une technique" onClose={() => setDec(false)}><Decodeur /></Modal>}
@@ -111,7 +116,7 @@ export function Decodeur() {
   );
 }
 
-export function TechDetail({ id, prof, onEdit, onDeleted }) {
+export function TechDetail({ id, prof, onEdit, onDeleted, onOpen }) {
   const t = tech(id);
   const { st, upd } = useStore();
   const [medias, setMedias] = useState([]);
@@ -156,12 +161,13 @@ export function TechDetail({ id, prof, onEdit, onDeleted }) {
       {prof && onEdit && (
         <div className="row no-print">
           <button className="btn sm" onClick={() => onEdit('modifier')}><Icon n="edit" />Modifier la fiche</button>
-          <button className="btn sm" onClick={() => onEdit('copie')}><Icon n="layers" />Nouvelle fiche à partir de celle-ci</button>
+          <button className="btn sm" onClick={() => onEdit('dupliquer')}><Icon n="layers" />Dupliquer (variante bis, ter…)</button>
           {(t.perso || t.modifiee || locale) && <button className="btn sm ghost" onClick={revenir}><Icon n={t.perso ? 'trash' : 'reset'} />{t.perso ? 'Supprimer la fiche' : 'Revenir à la fiche d\'origine'}</button>}
           {t.masquee && <span className="chip red">Masquée</span>}
         </div>
       )}
       <div className="row"><Lvl n={t.niv} /><span className="muted">{t.trad}</span></div>
+      <Variantes id={id} prof={prof} onOpen={onOpen} />
       <div className="row">
         <span className="chip">{FAMILLES[t.fam]?.label}</span>
         {t.gokyo && <span className="chip">Gokyo : {t.gokyo}</span>}
@@ -259,4 +265,35 @@ function Thumb({ slot }) {
   }, [slot]);
   if (!m) return null;
   return <div className="thumb">{m.type.startsWith('video') ? <video src={m.url} muted playsInline autoPlay loop /> : <img src={m.url} alt="" />}</div>;
+}
+
+// Raccourcis entre une fiche et ses variantes, et nom de leur famille
+function Variantes({ id, prof, onOpen }) {
+  const { upd } = useStore();
+  const membres = variantes(id);
+  const [nom, setNom] = useState(null);
+  if (!membres.length) return null;
+  const tete = teteDe(id);
+  const t = tech(id);
+  const nommer = () => {
+    const n = (nom || '').trim();
+    upd((d) => { const f = { ...(d.fiches || {}) }; f[tete] = { ...(f[tete] || {}), groupe: n || undefined }; if (!n) delete f[tete].groupe; d.fiches = f; });
+    setNom(null); toast('Nom de la famille enregistré');
+  };
+  const detacher = () => {
+    upd((d) => { const f = { ...(d.fiches || {}) }; f[id] = { ...(f[id] || {}), variante_de: null }; d.fiches = f; });
+    toast('Fiche détachée de la famille');
+  };
+  return (
+    <div className="card variantes">
+      <div className="small"><b>{familleVariantes(id)}</b>{nom === null && prof && <button className="lien" onClick={() => setNom(familleVariantes(id))}> renommer</button>}</div>
+      {nom !== null && <div className="row" style={{ marginTop: 6 }}><input type="text" value={nom} onChange={(e) => setNom(e.target.value)} style={{ flex: 1, minWidth: 180 }} /><button className="btn sm" onClick={nommer}><Icon n="check" />Enregistrer</button></div>}
+      <div className="row" style={{ marginTop: 6 }}>
+        {membres.map((m) => m.id === id
+          ? <span key={m.id} className="chip on"><Lvl n={m.niv} />{m.nom}</span>
+          : <button key={m.id} className="chip" onClick={() => onOpen && onOpen(m.id)}><Lvl n={m.niv} />{m.nom}</button>)}
+      </div>
+      {prof && t.variante_de && <button className="btn sm ghost" style={{ marginTop: 6 }} onClick={detacher}>Détacher cette fiche de la famille</button>}
+    </div>
+  );
 }

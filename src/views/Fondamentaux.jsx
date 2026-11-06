@@ -109,7 +109,7 @@ export function Fondamentaux({ prof }) {
       )}
 
       {vue === 'cycle' && <OuDansLeCycle />}
-      {open && <Modal title={tech(open).nom} onClose={() => setOpen(null)}><TechDetail id={open} prof={prof} /></Modal>}
+      {open && <Modal title={tech(open).nom} onClose={() => setOpen(null)}><TechDetail id={open} prof={prof} onOpen={setOpen} /></Modal>}
     </div>
   );
 }

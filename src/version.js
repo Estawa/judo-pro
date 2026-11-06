@@ -1,5 +1,11 @@
-export const VERSION = '1.5.0';
+export const VERSION = '1.6.0';
 export const CHANGELOG = [
+  { v: '1.6.0', d: '6 novembre 2026', l: [
+    '« Dupliquer (variante bis, ter…) » sur chaque fiche : toute la fiche est recopiée (textes, schéma, direction du déséquilibre, famille, niveau, et au choix photos, vidéos, illustrations, liens YouTube et séances), puis s\'ouvre pour retoucher seulement ce qui change.',
+    'Nom proposé automatiquement : « … bis », « … ter », « … quater », « … quinquies »…',
+    'Variantes liées : chaque fiche de la famille affiche des raccourcis vers les autres ; la famille peut être renommée, et une fiche peut en être détachée.',
+    'Filtre « Familles de variantes » dans l\'onglet Techniques, et nombre de variantes sur chaque carte.',
+  ] },
   { v: '1.5.0', d: '6 novembre 2026', l: [
     'Fiches techniques modifiables (professeur) : sur chaque fiche, « Modifier la fiche » change le titre, le sous-titre, la famille, le niveau, la description, le schéma animé et la direction du déséquilibre, les trois phases, les étapes, points clés, erreurs, sécurité, éducatifs, enchaînements, contres et sorties.',
     'Séances où une fiche apparaît : cochez les séances de chaque programmation (24, 12 séances, Prog Élèves) ; une fiche peut être déplacée, ajoutée à d\'autres séances ou masquée.',

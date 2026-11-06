@@ -1,5 +1,9 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.6.0 — 6 novembre 2026
+- Dupliquer une fiche intégralement (textes, schéma, médias, YouTube, séances au choix) pour en faire une variante bis, ter, quater…
+- Variantes liées par des raccourcis, famille renommable, filtre « Familles de variantes ».
+
 v1.5.0 — 6 novembre 2026
 - Fiches techniques modifiables : titre, textes, famille, niveau, schéma animé, séances où la fiche apparaît ; fiche masquable.
 - Nouvelle fiche vierge, et nouvelle fiche à partir d'une fiche existante ; photos, vidéos, croquis et YouTube comme les autres.

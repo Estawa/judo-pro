@@ -153,10 +153,21 @@ IMGS(('fiche-boutons.png', 'Boutons d\'une fiche'), ('fiche-modifier.png', 'Modi
 B('<b>Modifier la fiche</b> : titre, sous-titre (traduction), famille (où ranger la fiche), niveau, description ; croquis : schéma animé (au choix parmi ceux de l\'appli, ou aucun) et direction du déséquilibre ; les trois phases ; étapes, points clés, erreurs fréquentes, éducatifs (une ligne par élément) ; sécurité, enchaînements, contres, sorties. Un champ vide n\'apparaît pas sur la fiche.',
   '<b>Séances où elle apparaît</b> : pour chaque programmation (24 séances, 12 séances, Prog Élèves), cocher les séances ; la fiche s\'affiche alors dans « Techniques de la séance ». Pour une fiche de l\'appli, les séances de la programmation d\'origine sont déjà cochées : décocher pour la retirer, cocher pour l\'ajouter ailleurs.',
   '<b>Masquer cette fiche</b> : elle disparaît des listes et des séances ; elle reste dans « Fiches masquées », en bas de l\'onglet, pour la remettre.',
-  '<b>Nouvelle fiche</b> (en haut de l\'onglet) : une fiche vierge, à remplir et à placer comme les autres (famille, niveau, séances). <b>Nouvelle fiche à partir de celle-ci</b> : une copie à modifier, la fiche d\'origine restant intacte.',
+  '<b>Nouvelle fiche</b> (en haut de l\'onglet) : une fiche vierge, à remplir et à placer comme les autres (famille, niveau, séances).',
   'Photos, vidéos et croquis dessinés à la main (photographiés) : après l\'enregistrement, « Photo / vidéo » ou « Album » sous le schéma, et « Mes photos, vidéos et GIF » en bas de la fiche ; liens YouTube comme pour les autres fiches.',
   '<b>Revenir à la fiche d\'origine</b> (fiche modifiée) ou <b>Supprimer la fiche</b> (fiche créée). La case <b>Mes fiches</b> n\'affiche que les fiches créées ou modifiées.',
   'Les fiches modifiées restent sur l\'appareil. Pour qu\'elles apparaissent chez les étudiants et sur vos autres appareils : Réglages › « Exporter mes illustrations et mes fiches (zip) », puis envoyer le fichier pour qu\'il soit publié avec l\'appli.')
+
+story.append(CondPageBreak(130 * mm))
+H2('Dupliquer une fiche : variantes bis, ter, quater…')
+IMGS(('fiche-dupliquer.png', 'Dupliquer une fiche'), ('fiche-variantes.png', 'Une famille de variantes'))
+B('<b>Dupliquer (variante bis, ter…)</b> (professeur) : toute la fiche est recopiée (titre, textes, schéma animé, direction du déséquilibre, famille, niveau) ; rien à retaper.',
+  '<b>Titre de la copie</b> : proposé automatiquement (« Ippon-seoi-nage bis », puis « ter », « quater », « quinquies »…), modifiable.',
+  '<b>En faire une variante liée</b> (coché) : la copie rejoint la famille de la fiche d\'origine. Sans cette case, c\'est une simple copie indépendante.',
+  '<b>Copier aussi les photos, vidéos, illustrations et liens YouTube</b> (coché) ; <b>La placer dans les mêmes séances que l\'original</b> (au choix).',
+  '<b>Dupliquer et retoucher</b> : la copie s\'ouvre directement dans « Modifier la fiche » pour changer seulement ce qui diffère.',
+  'Sur chaque fiche d\'une famille, un cadre donne des <b>raccourcis</b> vers toutes ses variantes (la fiche ouverte est en noir). <b>renommer</b> donne un nom à la famille (par défaut « … et ses variantes ») ; <b>Détacher cette fiche de la famille</b> la rend indépendante.',
+  'Dans les filtres de l\'onglet, la liste des familles propose aussi les <b>Familles de variantes</b> : choisir l\'une d\'elles n\'affiche que ses fiches. Les cartes indiquent le nombre de variantes.')
 
 H1('7. Onglet Théorie')
 B('Chapitres : fiche théorie ou approfondissement STAPS (histoire, principes et code moral, analyse technique, biomécanique, physiologie, didactique, grades et kata, sécurité).',
@@ -227,6 +238,7 @@ P('Toutes les données restent sur l\'appareil utilisé (aucun compte, aucun env
 
 H1('16. Chronologie des versions')
 T([['Version', 'Date', 'Contenu'],
+   ['1.6.0', '6 novembre 2026', 'Dupliquer une fiche intégralement (textes, schéma, médias, YouTube, séances au choix) pour créer une variante bis, ter, quater… ; variantes liées par des raccourcis, famille renommable, filtre « Familles de variantes ».'],
    ['1.5.0', '6 novembre 2026', 'Fiches techniques modifiables : titre, textes, famille, niveau, schéma animé, séances où la fiche apparaît, fiche masquable ; nouvelle fiche vierge ou à partir d\'une fiche existante ; revenir à l\'origine, supprimer, filtre « Mes fiches » ; export des fiches avec les illustrations.'],
    ['1.4.1', '5 novembre 2026', 'Séances : toutes les techniques prévues dans une séance s\'affichent, quel que soit le niveau choisi (tai-otoshi en séance 9 de Prog Élèves et la chute avant roulée étaient masqués).'],
    ['1.4.0', '5 novembre 2026', 'Troisième parcours « Prog Élèves » : l\'appli prend trois formes (SUAPS, L2 STAPS, Prog Élèves). Progression de 15 séances pour débutants avec déroulé minuté et point didactique ; cadre, fondamentaux, groupe, évaluation pratique /12 et écrit /8 adaptés ; questions de didactique.'],
