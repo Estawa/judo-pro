@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { SEANCES } from '../data/seances.js';
 import { PROGRAMMES, STRUCTURE, PRINCIPES, OBJECTIFS_NIVEAU } from '../data/programme.js';
 import { LIENS_STAPS_24, LIENS_STAPS_12, CHAPITRES } from '../data/theorie.js';
-import { tech, NIVEAUX } from '../data/techniques.js';
+import { tech, NIVEAUX, techsSeance } from '../data/techniques.js';
 import { useStore } from '../store.js';
 import { Icon, Lvl, Seg, Modal, Back } from '../ui.jsx';
 import { TechDetail } from './Techniques.jsx';
@@ -132,7 +132,7 @@ function SeanceDetail({ s, prof, niv, onBack, onGo }) {
   const liens = ({ p24: LIENS_STAPS_24, p12: LIENS_STAPS_12 }[prog] || {})[s.n] || [];
   const fait = !!st.faites[prog]?.[s.n];
   const total = SEANCES[prog].length;
-  const techs = (s.tech || []).map(tech).filter(Boolean);
+  const techs = techsSeance(prog, s.n, s.tech);
   const th = s.theorie;
 
   return (

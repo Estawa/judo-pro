@@ -14,6 +14,8 @@ import { Chrono } from './views/Chrono.jsx';
 import { Staps } from './views/Staps.jsx';
 import { Fondamentaux } from './views/Fondamentaux.jsx';
 import { accesConnu, rafraichirAcces, accesEtudiantOuvert, empreinte, dateFr } from './acces.js';
+import { appliquerFiches } from './data/techniques.js';
+import { fichesPubliees } from './media.js';
 
 const TABS_PROF = [['seances', 'Séances', 'calendar'], ['fond', 'Fondamentaux', 'star'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help'], ['groupe', 'Groupe', 'users'], ['eval', 'Évaluation', 'clipboard'], ['regl', 'Réglages', 'settings']];
 const TABS_ETU = [['seances', 'Programme', 'calendar'], ['fond', 'Fondamentaux', 'star'], ['tech', 'Techniques', 'layers'], ['theo', 'Théorie', 'book'], ['arb', 'Arbitrage', 'flag'], ['quiz', 'Quiz', 'help']];
@@ -27,6 +29,12 @@ export default function App() {
   const [role, setRole] = useState(getRole);
   const [tab, setTab] = useState('seances');
   const [chrono, setChrono] = useState(false);
+  // Fiches : celles publiées avec l'appli, puis celles modifiées sur cet appareil (prioritaires).
+  const [pub, setPub] = useState({});
+  useEffect(() => { fichesPubliees().then(setPub); }, []);
+  const role0 = role;
+  const fiches = role0 === 'prof' ? { ...pub, ...(st.fiches || {}) } : pub;
+  appliquerFiches(fiches, pub);
   useEffect(() => { document.documentElement.dataset.theme = st.theme; }, [st.theme]);
   useEffect(() => { window.scrollTo(0, 0); }, [tab]);
   useEffect(() => { const f = (e) => setTab(e.detail); window.addEventListener('goto-tab', f); return () => window.removeEventListener('goto-tab', f); }, []);

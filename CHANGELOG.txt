@@ -1,5 +1,11 @@
 Judo Pro by C. Guilhem — journal des modifications
 
+v1.5.0 — 6 novembre 2026
+- Fiches techniques modifiables : titre, textes, famille, niveau, schéma animé, séances où la fiche apparaît ; fiche masquable.
+- Nouvelle fiche vierge, et nouvelle fiche à partir d'une fiche existante ; photos, vidéos, croquis et YouTube comme les autres.
+- Revenir à la fiche d'origine, supprimer une fiche créée, filtre « Mes fiches », fiches masquées.
+- Export des illustrations et des fiches (media/fiches.json) pour les publier avec l'appli.
+
 v1.4.1 — 5 novembre 2026
 - Séances : les techniques prévues dans une séance s'affichent toujours, quel que soit le niveau choisi (tai-otoshi en séance 9 de Prog Élèves et la chute avant roulée étaient masqués par le filtre « Débutant »).
 

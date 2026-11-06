@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { TECHNIQUES, FAMILLES, NIVEAUX, KUZUSHI, DECODEUR, tech, ijfUrl, ijfAnim, ytUrl } from '../data/techniques.js';
+import { TECHNIQUES, FAMILLES, NIVEAUX, KUZUSHI, DECODEUR, tech, ijfUrl, ijfAnim, ytUrl, fichesMasquees, estPubliee } from '../data/techniques.js';
+import { FicheEditeur } from './FicheEditeur.jsx';
 import { useStore } from '../store.js';
 import { Icon, Lvl, Seg, Modal, Search, toast } from '../ui.jsx';
 import { Schema, KuzushiRose } from '../Diagrams.jsx';
@@ -17,6 +18,8 @@ export function Techniques({ prof }) {
   const [open, setOpen] = useState(null);
   const [counts, setCounts] = useState({});
   const [dec, setDec] = useState(false);
+  const [edit, setEdit] = useState(null); // { id, mode }
+  const [mes, setMes] = useState(false);
   useEffect(() => { countAll().then(setCounts); }, [open]);
 
   const list = useMemo(() => TECHNIQUES.filter((t) => {
@@ -24,16 +27,21 @@ export function Techniques({ prof }) {
     if (cat !== 'tout' && c !== cat) return false;
     if (fam && t.fam !== fam) return false;
     if (niv && t.niv !== niv) return false;
-    if (q && !norm(t.nom + t.trad).includes(norm(q))) return false;
+    if (q && !norm(t.nom + (t.trad || '')).includes(norm(q))) return false;
+    if (mes && !t.perso && !t.modifiee) return false;
     return true;
-  }), [q, cat, fam, niv]);
+  }), [q, cat, fam, niv, mes, st.fiches]);
+  const masquees = prof ? fichesMasquees() : [];
 
   const famOpts = Object.entries(FAMILLES).filter(([, f]) => cat === 'tout' || f.cat === cat);
   return (
     <div>
       <div className="row between" style={{ marginBottom: 10 }}>
         <div><h1 style={{ marginBottom: 2 }}>Techniques</h1><div className="muted small">{TECHNIQUES.length} fiches · schémas animés, points clés, vidéos et animations 3D</div></div>
-        <button className="btn sm" onClick={() => setDec(true)}><Icon n="help" />Décoder un nom</button>
+        <div className="row">
+          {prof && <button className="btn sm primary" onClick={() => setEdit({ id: null, mode: 'vierge' })}><Icon n="plus" />Nouvelle fiche</button>}
+          <button className="btn sm" onClick={() => setDec(true)}><Icon n="help" />Décoder un nom</button>
+        </div>
       </div>
       <div className="card" style={{ marginBottom: 12 }}>
         <div className="row" style={{ marginBottom: 8 }}>
@@ -51,6 +59,7 @@ export function Techniques({ prof }) {
             <option value="">Tous les niveaux</option>
             {Object.entries(NIVEAUX).map(([k, n]) => <option key={k} value={k}>{n.label}</option>)}
           </select>
+          {prof && <label className="small" style={{ alignSelf: 'center' }}><input type="checkbox" checked={mes} onChange={(e) => setMes(e.target.checked)} /> Mes fiches (créées ou modifiées)</label>}
         </div>
       </div>
       <div className="grid g3">
@@ -70,13 +79,24 @@ export function Techniques({ prof }) {
               {t.contre && <span className="chip red">Contre</span>}
               {counts[t.id] ? <span className="chip green"><Icon n="video" style={{ width: 12 }} />{counts[t.id]}</span> : null}
               {(st.videos[t.id] || []).length ? <span className="chip green">YouTube {(st.videos[t.id] || []).length}</span> : null}
+              {prof && t.perso && <span className="chip">Ma fiche</span>}
+              {prof && t.modifiee && <span className="chip">Modifiée</span>}
             </div>
           </div>
         ))}
       </div>
       {!list.length && <div className="empty">Aucune technique ne correspond.</div>}
+      {masquees.length > 0 && (
+        <details className="card" style={{ marginTop: 12 }}>
+          <summary className="small"><b>Fiches masquées ({masquees.length})</b> — visibles par vous seul ici</summary>
+          <div className="row" style={{ marginTop: 8 }}>{masquees.map((t) => <button key={t.id} className="chip" onClick={() => setOpen(t.id)}><Lvl n={t.niv} />{t.nom}</button>)}</div>
+        </details>
+      )}
       <p className="tiny muted" style={{ marginTop: 14 }}>Niveaux : <Lvl n="D" /> débutant · <Lvl n="I" /> intermédiaire · <Lvl n="C" /> confirmé · <Lvl n="A" /> avancé · <Lvl n="X" /> culture (hors programme). Les schémas sont donnés pour un tori droitier.</p>
-      {open && <Modal title={tech(open).nom} onClose={() => setOpen(null)}><TechDetail id={open} prof={prof} /></Modal>}
+      {open && tech(open) && <Modal title={tech(open).nom} onClose={() => setOpen(null)}><TechDetail id={open} prof={prof} onEdit={(mode) => setEdit({ id: open, mode })} onDeleted={() => setOpen(null)} /></Modal>}
+      {edit && <Modal title={edit.mode === 'vierge' ? 'Nouvelle fiche' : edit.mode === 'copie' ? 'Nouvelle fiche à partir de « ' + tech(edit.id).nom + ' »' : 'Modifier la fiche'} onClose={() => setEdit(null)}>
+        <FicheEditeur id={edit.id} mode={edit.mode} onClose={() => setEdit(null)} onSaved={(cible) => { setEdit(null); setOpen(cible); }} />
+      </Modal>}
       {dec && <Modal title="Décoder le nom d'une technique" onClose={() => setDec(false)}><Decodeur /></Modal>}
     </div>
   );
@@ -91,7 +111,7 @@ export function Decodeur() {
   );
 }
 
-export function TechDetail({ id, prof }) {
+export function TechDetail({ id, prof, onEdit, onDeleted }) {
   const t = tech(id);
   const { st, upd } = useStore();
   const [medias, setMedias] = useState([]);
@@ -104,7 +124,7 @@ export function TechDetail({ id, prof }) {
   });
   useEffect(() => { reload(); return () => setUrls((old) => { Object.values(old).forEach((u) => URL.revokeObjectURL(u)); return {}; }); }, [id]);
   if (!t) return null;
-  const nage = FAMILLES[t.fam].cat === 'nage';
+  const nage = FAMILLES[t.fam]?.cat === 'nage';
   const vids = st.videos[id] || [];
 
   const onFiles = async (e) => {
@@ -119,18 +139,38 @@ export function TechDetail({ id, prof }) {
     upd((d) => { d.videos[id] = [...(d.videos[id] || []), yt.trim()]; }); setYt('');
   };
 
+  const locale = !!(st.fiches && st.fiches[id]);
+  const revenir = () => {
+    if (!confirm(t.perso ? 'Supprimer cette fiche ? Ses photos et vidéos restent sur l\'appareil.' : 'Revenir à la fiche d\'origine ? Vos modifications de cette fiche seront perdues.')) return;
+    upd((d) => {
+      const f = { ...(d.fiches || {}) };
+      if (t.perso) { if (estPubliee(id)) f[id] = { ...f[id], cree: true, masquee: true }; else delete f[id]; }
+      else if (estPubliee(id)) f[id] = {}; else delete f[id];
+      d.fiches = f;
+    });
+    toast(t.perso ? 'Fiche supprimée' : 'Fiche d\'origine rétablie');
+    if (t.perso) onDeleted && onDeleted();
+  };
   return (
     <div className="stack">
+      {prof && onEdit && (
+        <div className="row no-print">
+          <button className="btn sm" onClick={() => onEdit('modifier')}><Icon n="edit" />Modifier la fiche</button>
+          <button className="btn sm" onClick={() => onEdit('copie')}><Icon n="layers" />Nouvelle fiche à partir de celle-ci</button>
+          {(t.perso || t.modifiee || locale) && <button className="btn sm ghost" onClick={revenir}><Icon n={t.perso ? 'trash' : 'reset'} />{t.perso ? 'Supprimer la fiche' : 'Revenir à la fiche d\'origine'}</button>}
+          {t.masquee && <span className="chip red">Masquée</span>}
+        </div>
+      )}
       <div className="row"><Lvl n={t.niv} /><span className="muted">{t.trad}</span></div>
       <div className="row">
-        <span className="chip">{FAMILLES[t.fam].label}</span>
+        <span className="chip">{FAMILLES[t.fam]?.label}</span>
         {t.gokyo && <span className="chip">Gokyo : {t.gokyo}</span>}
         {t.kz && <span className="chip red">Kuzushi {KUZUSHI[t.kz]}</span>}
       </div>
       <p>{t.desc}</p>
       {prof && <p className="tiny muted no-print">Chaque dessin peut être remplacé par votre photo ou votre vidéo : « Photo / vidéo » ouvre l'appareil photo, « Album » votre galerie ou vos fichiers, « Dessin » revient au schéma.</p>}
       <div className="grid" style={{ gridTemplateColumns: nage && t.kz ? 'repeat(auto-fit, minmax(220px, 1fr))' : '1fr' }}>
-        <Illus slot={'tech:' + t.id}><Schema t={t} /></Illus>
+        <Illus slot={'tech:' + t.id}>{t.anim ? <Schema t={t} /> : (prof ? <div className="diag"><div className="cap">Pas de schéma : ajoutez votre photo, votre vidéo ou un croquis photographié avec les boutons ci-dessous.</div></div> : null)}</Illus>
         {nage && t.kz && <Illus slot={'rose:' + t.id}><div className="diag"><KuzushiRose dir={t.kz} /><div className="cap">Direction du déséquilibre (kuzushi), vue de dessus</div></div></Illus>}
       </div>
 

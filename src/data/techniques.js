@@ -31,7 +31,7 @@ export const KUZUSHI = {
   ar: 'vers l\'arrière', arg: 'vers l\'arrière-gauche', g: 'vers la gauche', avg: 'vers l\'avant-gauche',
 };
 
-export const TECHNIQUES = [
+export const TECHNIQUES_BASE = [
   // ───────────── UKEMI ─────────────
   {
     id: 'ushiro-ukemi', nom: 'Ushiro ukemi', trad: 'Chute arrière', fam: 'ukemi', niv: 'D', anim: 'chute-ar',
@@ -496,7 +496,43 @@ export const TECHNIQUES = [
   },
 ];
 
-export const tech = (id) => TECHNIQUES.find((t) => t.id === id);
+// ─────────── Fiches modifiées ou créées par le professeur ───────────
+// surcharges = { id: { champs modifiés…, cree?: true (nouvelle fiche), masquee?: true, seances?: { p24: [n…], p12: […], p15: […] } } }
+// Elles viennent de l'appareil (Réglages > données) et de la publication avec l'appli (media/fiches.json).
+export const CHAMPS_FICHE = ['nom', 'trad', 'fam', 'niv', 'desc', 'anim', 'kz', 'kuzushi', 'tsukuri', 'kake', 'etapes', 'points', 'erreurs', 'secu', 'educ', 'liaisons', 'contres', 'sorties'];
+let SURCH = {};
+let TOUTES = {};
+let PUBLIEES = new Set();
+export let TECHNIQUES = TECHNIQUES_BASE;
+const vide = (o) => !o || !Object.keys(o).length;
+export function appliquerFiches(surcharges, publiees) {
+  SURCH = surcharges || {};
+  PUBLIEES = new Set(Object.keys(publiees || {}).filter((k) => !vide(publiees[k])));
+  TOUTES = {};
+  for (const t of TECHNIQUES_BASE) TOUTES[t.id] = !vide(SURCH[t.id]) ? { ...t, ...SURCH[t.id], id: t.id, modifiee: true } : t;
+  for (const [id, f] of Object.entries(SURCH)) if (f && f.cree) TOUTES[id] = { fam: 'te', niv: 'D', nom: 'Nouvelle fiche', ...f, id, perso: true };
+  TECHNIQUES = Object.values(TOUTES).filter((t) => !t.masquee && FAMILLES[t.fam]);
+}
+appliquerFiches({});
+export const tech = (id) => TOUTES[id] || null;
+export const ficheOrigine = (id) => TECHNIQUES_BASE.find((t) => t.id === id) || null;
+export const fichesMasquees = () => Object.values(TOUTES).filter((t) => t.masquee);
+export const estPubliee = (id) => PUBLIEES.has(id);
+
+// Techniques d'une séance : celles prévues, sauf si la fiche a été déplacée, plus celles que vous y avez placées.
+export function techsSeance(prog, n, prevues) {
+  const ids = (prevues || []).filter((id) => {
+    const t = TOUTES[id];
+    if (!t || t.masquee) return false;
+    const sp = SURCH[id] && SURCH[id].seances && SURCH[id].seances[prog];
+    return Array.isArray(sp) ? sp.includes(n) : true;
+  });
+  for (const [id, f] of Object.entries(SURCH)) {
+    const sp = f && f.seances && f.seances[prog];
+    if (Array.isArray(sp) && sp.includes(n) && !ids.includes(id) && TOUTES[id] && !TOUTES[id].masquee) ids.push(id);
+  }
+  return ids.map((id) => TOUTES[id]);
+}
 
 export const ijfUrl = (t) => (t.ijf ? `https://judo.ijf.org/techniques/${t.ijf}` : null);
 export const ijfAnim = (t) => (t.ijf ? `https://judo.ijf.org/techniques/${t.ijf}/animation` : null);

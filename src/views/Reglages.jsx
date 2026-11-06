@@ -3,7 +3,7 @@ import { useStore } from '../store.js';
 import { SEANCES } from '../data/seances.js';
 import { Icon, Seg, toast, download } from '../ui.jsx';
 import { VERSION, CHANGELOG } from '../version.js';
-import { allIllus, exportIllus } from '../media.js';
+import { allIllus, exportIllus, fichesPubliees } from '../media.js';
 import { PARCOURS } from '../data/staps.js';
 import { accesConnu, rafraichirAcces, accesEtudiantOuvert, dateFr } from '../acces.js';
 
@@ -98,22 +98,28 @@ export function Reglages() {
 }
 
 function Illustrations() {
+  const { st } = useStore();
   const [n, setN] = useState(null);
-  useEffect(() => { allIllus().then((l) => setN(l.length)); }, []);
+  const [pub, setPub] = useState({});
+  useEffect(() => { allIllus().then((l) => setN(l.length)); fichesPubliees().then(setPub); }, []);
+  const locales = Object.keys(st.fiches || {}).length;
   const exp = async () => {
-    const z = await exportIllus();
-    if (!z) { toast('Aucune illustration personnelle sur cet appareil'); return; }
+    const fiches = { ...pub, ...(st.fiches || {}) };
+    const z = await exportIllus(Object.keys(fiches).length ? fiches : null);
+    if (!z) { toast('Aucune illustration ni fiche modifiée sur cet appareil'); return; }
     download(`judo-pro-illustrations-${new Date().toISOString().slice(0, 10)}.zip`, z);
   };
   return (
     <div className="card">
-      <h3>Mes illustrations (photos et vidéos à la place des dessins)</h3>
-      <p className="small">{n === null ? '…' : n === 0 ? 'Aucun dessin remplacé pour l\'instant.' : `${n} dessin(s) remplacé(s) sur cet appareil.`}</p>
-      <p className="small muted">Pour remplacer un dessin : ouvrez une technique ou un geste d'arbitrage, puis « Photo / vidéo » (appareil photo) ou « Album » (galerie, fichiers du PC). « Dessin » remet le schéma d'origine. Ces illustrations restent sur cet appareil. Pour qu'elles apparaissent aussi chez les étudiants et sur vos autres appareils, exportez-les et envoyez le fichier pour qu'il soit publié avec l'appli.</p>
-      <button className="btn sm" onClick={exp} disabled={!n}><Icon n="download" />Exporter mes illustrations (zip)</button>
+      <h3>Mes illustrations et mes fiches</h3>
+      <p className="small">{n === null ? '…' : n === 0 ? 'Aucun dessin remplacé pour l\'instant.' : `${n} dessin(s) remplacé(s) sur cet appareil.`}{' '}
+        {locales ? `${locales} fiche(s) modifiée(s) ou créée(s) sur cet appareil.` : 'Aucune fiche modifiée sur cet appareil.'}</p>
+      <p className="small muted">Pour remplacer un dessin : ouvrez une technique ou un geste d'arbitrage, puis « Photo / vidéo » (appareil photo) ou « Album » (galerie, fichiers du PC). « Dessin » remet le schéma d'origine. Pour modifier une fiche ou en créer une : onglet Techniques, « Modifier la fiche » ou « Nouvelle fiche ». Tout reste sur cet appareil. Pour que vos illustrations et vos fiches apparaissent aussi chez les étudiants et sur vos autres appareils, exportez-les et envoyez le fichier pour qu'il soit publié avec l'appli.</p>
+      <button className="btn sm" onClick={exp} disabled={!n && !locales}><Icon n="download" />Exporter mes illustrations et mes fiches (zip)</button>
     </div>
   );
 }
+
 
 function Partage() {
   const [a, setA] = useState(accesConnu);

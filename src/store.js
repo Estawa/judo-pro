@@ -10,7 +10,7 @@ export const DEFAULT = {
   v: 1, pin: '1234', theme: 'light', prog: 'p24', annee: '', dateDebut: '', groupeNom: 'L2 STAPS',
   dates: { p24: {}, p12: {}, p15: {} }, faites: { p24: {}, p12: {}, p15: {} }, notesSeance: { p24: {}, p12: {}, p15: {} },
   eleves: [], appel: { p24: {}, p12: {}, p15: {} }, evalPrat: {}, evalTheo: {}, videos: {}, favoris: [],
-  niveauVue: 'tous', parcours: 'suaps', interv: { p24: {}, p12: {}, p15: {} }, obs: [], bareme: { qcm: 8, ptQcm: 0.5, courtes: 2, ptCourte: 1 },
+  niveauVue: 'tous', parcours: 'suaps', fiches: {}, interv: { p24: {}, p12: {}, p15: {} }, obs: [], bareme: { qcm: 8, ptQcm: 0.5, courtes: 2, ptCourte: 1 },
 };
 
 // Ajoute les programmations manquantes (ex. p15) aux données enregistrées par une version précédente

@@ -64,7 +64,13 @@ export async function allIllus() {
     return await new Promise((res) => { const q = db.transaction(IL).objectStore(IL).getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => res([]); });
   } catch (e) { return []; }
 }
-let publies = null;
+let publies = null, fichesPub = null;
+// Fiches modifiées ou créées, publiées avec l'appli (media/fiches.json) : visibles sur tous les appareils.
+export async function fichesPubliees() {
+  if (fichesPub) return fichesPub;
+  try { const r = await fetch('media/fiches.json', { cache: 'no-cache' }); fichesPub = r.ok ? await r.json() : {}; } catch (e) { fichesPub = {}; }
+  return fichesPub;
+}
 export async function illusPubliees() {
   if (publies) return publies;
   try { const r = await fetch('media/manifest.json', { cache: 'no-cache' }); publies = r.ok ? await r.json() : {}; } catch (e) { publies = {}; }
@@ -92,9 +98,12 @@ export async function zipFiles(files) { // [{ name, data: Uint8Array }]
   return new Blob([...parts, ...central, new Uint8Array(e.buffer)], { type: 'application/zip' });
 }
 const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif', 'image/webp': 'webp', 'image/heic': 'heic', 'video/mp4': 'mp4', 'video/quicktime': 'mov', 'video/webm': 'webm' };
-export async function exportIllus() {
-  const l = await allIllus(); if (!l.length) return null;
-  const manifest = {}; const files = [];
+export async function exportIllus(fiches) {
+  const l = await allIllus();
+  const nbFiches = fiches ? Object.keys(fiches).length : 0;
+  if (!l.length && !nbFiches) return null;
+  // Les illustrations déjà publiées restent dans le manifeste (leurs fichiers sont déjà dans le dossier media/).
+  const manifest = { ...(await illusPubliees()) }; const files = [];
   for (const x of l) {
     const ext = EXT[x.type] || (x.name.split('.').pop() || 'bin').toLowerCase();
     const name = 'media/' + x.slot.replace(':', '__') + '.' + ext;
@@ -102,5 +111,6 @@ export async function exportIllus() {
     files.push({ name, data: new Uint8Array(await x.blob.arrayBuffer()) });
   }
   files.push({ name: 'media/manifest.json', data: new TextEncoder().encode(JSON.stringify(manifest, null, 1)) });
+  if (fiches) files.push({ name: 'media/fiches.json', data: new TextEncoder().encode(JSON.stringify(fiches, null, 1)) });
   return zipFiles(files);
 }

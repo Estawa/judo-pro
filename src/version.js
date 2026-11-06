@@ -1,5 +1,12 @@
-export const VERSION = '1.4.1';
+export const VERSION = '1.5.0';
 export const CHANGELOG = [
+  { v: '1.5.0', d: '6 novembre 2026', l: [
+    'Fiches techniques modifiables (professeur) : sur chaque fiche, « Modifier la fiche » change le titre, le sous-titre, la famille, le niveau, la description, le schéma animé et la direction du déséquilibre, les trois phases, les étapes, points clés, erreurs, sécurité, éducatifs, enchaînements, contres et sorties.',
+    'Séances où une fiche apparaît : cochez les séances de chaque programmation (24, 12 séances, Prog Élèves) ; une fiche peut être déplacée, ajoutée à d\'autres séances ou masquée.',
+    '« Nouvelle fiche » (fiche vierge) et « Nouvelle fiche à partir de celle-ci » (copie à modifier), rangées dans la famille et le niveau choisis ; photos, vidéos, croquis et liens YouTube comme pour les autres fiches.',
+    '« Revenir à la fiche d\'origine », « Supprimer la fiche » (fiches créées), filtre « Mes fiches » et liste des fiches masquées.',
+    'Réglages : « Exporter mes illustrations et mes fiches (zip) » pour les publier chez les étudiants et sur vos autres appareils.',
+  ] },
   { v: '1.4.1', d: '5 novembre 2026', l: [
     'Séances : toutes les techniques prévues dans une séance s\'affichent désormais, quel que soit le niveau choisi (en Prog Élèves, tai-otoshi en séance 9 et la chute avant roulée étaient masqués par le filtre « Débutant »).',
   ] },
